@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabaseClient"
 import { useRouter } from "next/navigation"
-import React, { use, useState } from "react"
+import React, { useState } from "react"
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("")
@@ -11,7 +11,7 @@ const RegisterPage = () => {
   const [success, setSuccess] = useState("")
 
   const signupHandler = async () => {
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
     })
@@ -40,8 +40,8 @@ const RegisterPage = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input type="" id="login-name" placeholder="성명" />
-      <input type="" id="" placeholder="닉네임" />
+      <input type="text" id="login-name" placeholder="성명" />
+      <input type="text" id="login-nickname" placeholder="닉네임" />
       <input
         type="password"
         id="login-password"
