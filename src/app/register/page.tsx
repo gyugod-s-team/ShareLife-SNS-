@@ -51,6 +51,9 @@ const RegisterPage = () => {
       />
       <Button onClick={signupHandler}>가입</Button>
       <Button onClick={navigateToLogin}>계정이 있으신가요? 로그인</Button>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
     </>
   )
 }
