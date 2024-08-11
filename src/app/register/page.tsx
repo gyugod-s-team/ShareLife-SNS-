@@ -1,14 +1,14 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { supabase } from '@/lib/supabaseClient'
-import { useRouter } from 'next/navigation'
-import React, { use, useState } from 'react'
+"use client"
+import { Button } from "@/components/ui/button"
+import { supabase } from "@/lib/supabaseClient"
+import { useRouter } from "next/navigation"
+import React, { use, useState } from "react"
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
 
   const signupHandler = async () => {
     const { data, error } = await supabase.auth.signUp({
@@ -19,7 +19,7 @@ const RegisterPage = () => {
     if (error) {
       setError(error.message)
     } else {
-      setSuccess('Signup successful! Please check your email for verification.')
+      setSuccess("Signup successful! Please check your email for verification.")
     }
   }
 
@@ -27,7 +27,7 @@ const RegisterPage = () => {
 
   const navigateToLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    router.push('/login')
+    router.push("/login")
   }
 
   return (

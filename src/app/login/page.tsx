@@ -1,8 +1,8 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import Head from 'next/head'
-import { useRouter } from 'next/navigation'
-import React from 'react'
+"use client"
+import { Button } from "@/components/ui/button"
+import Head from "next/head"
+import { useRouter } from "next/navigation"
+import React from "react"
 
 const LoginPage = () => {
   const router = useRouter()
@@ -12,7 +12,7 @@ const LoginPage = () => {
   // }
   const registerHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    router.push('/register')
+    router.push("/register")
   }
 
   return (
@@ -31,7 +31,7 @@ const LoginPage = () => {
       <form>
         <input type="email" id="login-email" placeholder="아이디(이메일)" />
         <input type="password" id="login-password" placeholder="비밀번호" />
-        <Button onClick={() => alert('hi')}>로그인</Button>
+        <Button onClick={() => alert("hi")}>로그인</Button>
         <Button onClick={registerHandler}>회원가입</Button>
       </form>
     </div>

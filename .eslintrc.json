@@ -14,7 +14,7 @@
     "createDefaultProgram": true
   },
   "rules": {
-    "prettier/prettier": ["error", { "singleQuote": false }],
+    "prettier/prettier": ["error"],
     "react/react-in-jsx-scope": "off",
     "no-console": "warn",
     "no-unused-vars": "warn",

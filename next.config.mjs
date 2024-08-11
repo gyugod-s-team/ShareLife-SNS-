@@ -1,11 +1,11 @@
-import TerserPlugin from 'terser-webpack-plugin'
+import TerserPlugin from "terser-webpack-plugin"
 
-const isProduction = process.env.NODE_ENV === 'production'
+const isProduction = process.env.NODE_ENV === "production"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['example.com'], // 이미지 도메인 설정
+    domains: ["example.com"], // 이미지 도메인 설정
   },
   webpack(config) {
     if (isProduction) {
