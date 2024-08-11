@@ -1,6 +1,6 @@
-import TerserPlugin from 'terser-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin'
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -26,10 +26,10 @@ const nextConfig = {
             extractComments: false, // 주석을 별도의 파일로 추출하지 않음
           }),
         ],
-      };
+      }
     }
-    return config;
+    return config
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
