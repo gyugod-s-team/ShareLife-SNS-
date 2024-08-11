@@ -1,16 +1,44 @@
 "use client"
+
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabaseClient"
 import { useRouter } from "next/navigation"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+
+  const router = useRouter()
 
   const signupHandler = async () => {
+    const turnstileToken = (
+      document.querySelector(".cf-turnstile") as HTMLInputElement
+    )?.getAttribute("data-turnstile-token")
+
+    if (!turnstileToken) {
+      setError("Please complete the CAPTCHA verification.")
+      return
+    }
+
+    const response = await fetch("/api/verify-turnstile", {
+      method: "POST",
+      headers: {
+        "Content=Type": "application/json",
+      },
+      body: JSON.stringify({ token: turnstileToken }),
+    })
+
+    const data = await response.json()
+
+    if (!data.success) {
+      setError("CAPTCHA verification failed.")
+      return
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -23,11 +51,13 @@ const RegisterPage = () => {
     }
   }
 
-  const router = useRouter()
-
   const navigateToLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     router.push("/login")
+  }
+
+  const onTurnstileCallback = (token: string) => {
+    setTurnstileToken(token)
   }
 
   return (
@@ -49,9 +79,13 @@ const RegisterPage = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <div
+        className="cf-turnstile"
+        data-sitekey="0x4AAAAAAAhAX4NKr_No5Ofa"
+        data-callback={onTurnstileCallback}
+      ></div>
       <Button onClick={signupHandler}>가입</Button>
       <Button onClick={navigateToLogin}>계정이 있으신가요? 로그인</Button>
-
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
     </>
