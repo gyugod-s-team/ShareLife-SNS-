@@ -14,11 +14,28 @@ const RegisterPage = () => {
 
   const router = useRouter()
 
-  const signupHandler = async () => {
-    const turnstileToken = (
-      document.querySelector(".cf-turnstile") as HTMLInputElement
-    )?.getAttribute("data-turnstile-token")
+  // Turnstile 스크립트를 클라이언트에서만 로드
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js"
+    script.async = true
+    script.defer = true
+    document.head.appendChild(script)
 
+    // Turnstile 스크립트 로드 후 콜백을 등록
+    script.onload = () => {
+      ;(window as any).turnstile?.render(".cf-turnstile", {
+        sitekey: "0x4AAAAAAAhAX4NKr_No5Ofa",
+        callback: (token: string) => setTurnstileToken(token),
+      })
+    }
+
+    return () => {
+      document.head.removeChild(script)
+    }
+  }, [])
+
+  const signupHandler = async () => {
     if (!turnstileToken) {
       setError("Please complete the CAPTCHA verification.")
       return
@@ -27,7 +44,7 @@ const RegisterPage = () => {
     const response = await fetch("/api/verify-turnstile", {
       method: "POST",
       headers: {
-        "Content=Type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ token: turnstileToken }),
     })
@@ -56,10 +73,6 @@ const RegisterPage = () => {
     router.push("/login")
   }
 
-  const onTurnstileCallback = (token: string) => {
-    setTurnstileToken(token)
-  }
-
   return (
     <>
       <div>Share Life</div>
@@ -82,7 +95,6 @@ const RegisterPage = () => {
       <div
         className="cf-turnstile"
         data-sitekey="0x4AAAAAAAhAX4NKr_No5Ofa"
-        data-callback={onTurnstileCallback}
       ></div>
       <Button onClick={signupHandler}>가입</Button>
       <Button onClick={navigateToLogin}>계정이 있으신가요? 로그인</Button>
