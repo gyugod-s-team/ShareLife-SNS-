@@ -1,106 +1,160 @@
 "use client"
-
 import { Button } from "@/components/ui/button"
-import { supabase } from "@/lib/supabaseClient"
+import { Card, CardFooter, CardHeader } from "@/components/ui/card"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { useToast } from "@/components/ui/use-toast"
+import { supabase } from "@/lib/supabase"
+import { RegisterSchema, userType } from "@/lib/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import Head from "next/head"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React from "react"
+import { useForm } from "react-hook-form"
 
-const RegisterPage = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null)
+const RegisterPage: React.FC = () => {
+  const route = useRouter()
 
-  const router = useRouter()
+  const { toast } = useToast()
 
-  // Turnstile 스크립트를 클라이언트에서만 로드
-  useEffect(() => {
-    const script = document.createElement("script")
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js"
-    script.async = true
-    script.defer = true
-    document.head.appendChild(script)
+  const form = useForm<userType>({
+    resolver: zodResolver(RegisterSchema),
+  })
 
-    // Turnstile 스크립트 로드 후 콜백을 등록
-    script.onload = () => {
-      ;(window as any).turnstile?.render(".cf-turnstile", {
-        sitekey: "0x4AAAAAAAhAX4NKr_No5Ofa",
-        callback: (token: string) => setTurnstileToken(token),
-      })
-    }
+  const handleSignUp = async (data: userType) => {
+    const { email, password, name, nickname } = data
 
-    return () => {
-      document.head.removeChild(script)
-    }
-  }, [])
+    //Zod 유효성 검사
+    const result = RegisterSchema.safeParse({ email, password, name, nickname })
 
-  const signupHandler = async () => {
-    if (!turnstileToken) {
-      setError("Please complete the CAPTCHA verification.")
-      return
-    }
-
-    const response = await fetch("/api/verify-turnstile", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token: turnstileToken }),
-    })
-
-    const data = await response.json()
-
-    if (!data.success) {
-      setError("CAPTCHA verification failed.")
+    if (!result.success) {
+      const errors = result.error.errors.map((err) => err.message)
+      toast({ title: "회원가입 실패", description: errors.join(", ") })
       return
     }
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          name,
+          nickname,
+        },
+      },
     })
 
+    //supabase signUp 오류 처리 로직
     if (error) {
-      setError(error.message)
-    } else {
-      setSuccess("Signup successful! Please check your email for verification.")
+      toast({
+        title: error.message,
+        description: "회원가입을 실패하였습니다.",
+      })
+      return
     }
+
+    toast({
+      title: "회원가입 성공",
+      description: "회원가입이 성공적으로 완료되었습니다.",
+    })
+    route.push("/home")
   }
 
-  const navigateToLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    router.push("/login")
+  const goToLoginPage = () => {
+    route.push("/login")
   }
-
   return (
-    <>
-      <div>Share Life</div>
-      <input
-        type="email"
-        id="login-email"
-        placeholder="이메일 주소"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input type="text" id="login-name" placeholder="성명" />
-      <input type="text" id="login-nickname" placeholder="닉네임" />
-      <input
-        type="password"
-        id="login-password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <div
-        className="cf-turnstile"
-        data-sitekey="0x4AAAAAAAhAX4NKr_No5Ofa"
-      ></div>
-      <Button onClick={signupHandler}>가입</Button>
-      <Button onClick={navigateToLogin}>계정이 있으신가요? 로그인</Button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
-    </>
+    <div>
+      <Head>
+        <title>Signup to Share Life - Make Your Account</title>
+        <meta
+          name="description"
+          content="Sing Up to Share Life to access your account and connect with others."
+        />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://www.sharelife.shop/"></link>
+      </Head>
+      <Card className="w-[480px]">
+        <CardHeader>
+          <div className="flex justify-center">
+            <Image
+              width={300}
+              height={100}
+              src="/share life.png"
+              alt="Logo Image"
+            />
+          </div>
+        </CardHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSignUp)}
+            className="space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="이메일" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input type="password" placeholder="비밀번호" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="이름" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nickname"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="닉네임" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <CardFooter className="flex justify-center">
+              <Button type="submit">가입</Button>
+              <Button onClick={goToLoginPage}>계정이 있으신가요? 로그인</Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </Card>
+    </div>
   )
 }
 
