@@ -3,11 +3,7 @@ import React from "react"
 import LoginPage from "./login/page"
 
 const HomePage = () => {
-  return (
-    <>
-      <LoginPage />
-    </>
-  )
+  return <LoginPage />
 }
 
 export default HomePage
