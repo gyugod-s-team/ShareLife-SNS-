@@ -26,12 +26,12 @@
 ## 기술 스택
 <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
     <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
-<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' width='100' height='100'><p>HTML5</p></img>
+<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' width='100' height='100' /><p>HTML5</p>
     </div>
-      <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
+          <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
 <img src='https://github.com/user-attachments/assets/ae9db30b-ded1-4293-9465-44d28008da47' width='100' height='100'>CSS3</img>
       </div>
-        <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
+            <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
 <img src='https://github.com/user-attachments/assets/09c362d3-3fb8-42bd-9a6e-4d34882df65b' width='100' height='100'>TypeScript</img>
         </div>
 <img src='https://github.com/user-attachments/assets/90b481fa-feff-4fc6-a72f-a35e81d06918' width='100' height='100'></img>
