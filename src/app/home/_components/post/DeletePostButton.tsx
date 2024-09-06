@@ -7,7 +7,7 @@ type DeletePostModalProps = {
   post: Post
 }
 
-const DeletePostModal: React.FC<DeletePostModalProps> = ({ post }) => {
+const DeletePostButton: React.FC<DeletePostModalProps> = ({ post }) => {
   const { deletePost } = usePosts()
 
   return (
@@ -19,4 +19,4 @@ const DeletePostModal: React.FC<DeletePostModalProps> = ({ post }) => {
   )
 }
 
-export default DeletePostModal
+export default DeletePostButton

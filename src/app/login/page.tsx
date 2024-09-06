@@ -1,6 +1,10 @@
 "use client"
-import { Button } from "@/components/ui/button"
-import { Card, CardFooter, CardHeader } from "@/components/ui/card"
+import { useToast } from "@/components/ui/use-toast"
+import { LoginSchema, userType } from "@/lib/zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import React from "react"
+import { useForm } from "react-hook-form"
 import {
   Form,
   FormControl,
@@ -9,15 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useToast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
-import { LoginSchema, userType } from "@/lib/zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import Head from "next/head"
+import { Card, CardFooter, CardHeader } from "@/components/ui/card"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
-import React from "react"
-import { useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button"
+import { signIn } from "next-auth/react"
 
 const LoginPage = () => {
   const route = useRouter()
@@ -39,30 +39,53 @@ const LoginPage = () => {
       return
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
+    // const { error } = await supabase.auth.signInWithPassword({
+    //   email,
+    //   password,
+    // })
+
+    // if (error) {
+    //   if (error.message.includes("Invalid login credentials")) {
+    //     toast({
+    //       title: "로그인 실패",
+    //       description: "이메일 또는 비밀번호가 잘못되었습니다.",
+    //     })
+    //   } else {
+    //     console.log("login error:", error.message)
+    //     toast({
+    //       title: "로그인 실패",
+    //       description: error.message,
+    //     })
+    //   }
+    //   return
+    // }
+    // toast({
+    //   title: "로그인 성공",
+    //   description: "로그인에 성공하였습니다.",
+    // })
+    // route.push("/home")
+
+    // NextAuth의 signIn을 사용하여 로그인 시도
+    const res = await signIn("credentials", {
+      redirect: false,
       email,
       password,
     })
 
-    if (error) {
-      if (error.message.includes("Invalid login credentials")) {
-        toast({
-          title: "로그인 실패",
-          description: "이메일 또는 비밀번호가 잘못되었습니다.",
-        })
-      } else {
-        toast({
-          title: "로그인 실패",
-          description: error.message,
-        })
-      }
-      return
+    console.log("signIn response:", res)
+
+    if (res?.error) {
+      toast({
+        title: "로그인 실패",
+        description: res.error,
+      })
+    } else {
+      toast({
+        title: "로그인 성공",
+        description: "로그인에 성공하였습니다.",
+      })
+      route.push("/home")
     }
-    toast({
-      title: "로그인 성공",
-      description: "로그인에 성공하였습니다.",
-    })
-    route.push("/home")
   }
 
   const goToRegisterPage = (e: React.MouseEvent<HTMLButtonElement>) => {

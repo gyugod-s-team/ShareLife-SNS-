@@ -5,9 +5,15 @@ export type Post = {
   image_url: string
   user_id: string
   created_at: string
+  users: User
 }
 
-export type NewPost = Omit<Post, "id" | "created_at">
+export type User = {
+  nickname: string
+  profile_image: string
+}
+
+export type NewPost = Omit<Post, "id" | "created_at" | "users">
 
 export type Comment = {
   id: number

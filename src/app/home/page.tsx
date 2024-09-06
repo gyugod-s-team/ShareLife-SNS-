@@ -1,19 +1,21 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import useAuth from "@/hooks/useAuth"
 import usePosts from "@/hooks/usePosts"
-import React, { useCallback, useRef } from "react"
-import LikeButton from "./components/like/LikeButton"
-import EditPostModal from "./components/post/EditPostModal"
-import CreatePostModal from "./components/post/CreatePostModal"
-import DeletePostModal from "./components/post/DeletePostModal"
-import CommentSection from "./components/comment/CommentSection"
-import Logout from "./components/logout/Logout"
+import React, { useCallback, useEffect, useRef } from "react"
+import { useRouter } from "next/navigation"
+import Logout from "./_components/logout/Logout"
+import CreatePostModal from "./_components/post/CreatePostModal"
+import LikeButton from "./_components/like/LikeButton"
+import EditPostModal from "./_components/post/EditPostModal"
+import DeletePostButton from "./_components/post/DeletePostButton"
+import CommentSection from "./_components/comment/CommentSection"
+import Image from "next/image"
 
 const HomePage = () => {
-  const { currentUserId } = useAuth()
+  const { currentUserId, nickname, profileImage } = useAuth()
   const { posts, loadMorePosts, hasNextPage, isFetchingNextPage } = usePosts()
+  const router = useRouter()
 
   const observer = useRef<IntersectionObserver | null>(null)
   const lastPostElementRef = useCallback(
@@ -30,6 +32,10 @@ const HomePage = () => {
     [isFetchingNextPage, hasNextPage, loadMorePosts],
   )
 
+  const handleProfileClick = (userId: string) => {
+    router.push(`/profile/${userId}`)
+  }
+
   return (
     <div>
       <Logout />
@@ -42,6 +48,26 @@ const HomePage = () => {
               className="border p-4 mb-4"
               ref={index === posts.length - 1 ? lastPostElementRef : null}
             >
+              <span
+                onClick={() => handleProfileClick(post.user_id)}
+                className="cursor-pointer"
+              >
+                <div className="flex items-center mb-2">
+                  <Image
+                    src={post.users.profile_image} // 프로필 이미지
+                    alt={`${post.users.nickname}'s profile`}
+                    className="w-10 h-10 rounded-full mr-2"
+                    width={100}
+                    height={100}
+                  />
+                  <span
+                    onClick={() => handleProfileClick(post.user_id)}
+                    className="cursor-pointer font-semibold"
+                  >
+                    {post.users.nickname} {/* 닉네임 */}
+                  </span>
+                </div>
+              </span>
               <h3 className="font-bold">{post.title}</h3>
               <p>{post.content}</p>
               {post.image_url && (
@@ -52,7 +78,7 @@ const HomePage = () => {
               {post.user_id === currentUserId && (
                 <>
                   <EditPostModal post={post} />
-                  <DeletePostModal post={post} />
+                  <DeletePostButton post={post} />
                 </>
               )}
               <CommentSection postId={post.id} />

@@ -1,8 +1,6 @@
-// components/ProfilePage.tsx
 import React from "react"
 import useAuth from "@/hooks/useAuth"
 import { Button } from "@/components/ui/button"
-// import EditProfileModal from "./EditProfileModal"
 
 const ProfilePage = () => {
   const { currentUserId, nickname, handleLogout } = useAuth()
@@ -15,7 +13,6 @@ const ProfilePage = () => {
         <Button onClick={handleLogout} className="mt-4">
           로그아웃
         </Button>
-        {/* <EditProfileModal /> */}
       </div>
     </div>
   )

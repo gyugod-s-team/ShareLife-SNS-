@@ -31,7 +31,7 @@ const RegisterPage: React.FC = () => {
   const handleSignUp = async (data: userType) => {
     const { email, password, name, nickname } = data
 
-    //Zod 유효성 검사
+    // Zod 유효성 검사
     const result = RegisterSchema.safeParse({ email, password, name, nickname })
 
     if (!result.success) {
@@ -40,22 +40,50 @@ const RegisterPage: React.FC = () => {
       return
     }
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
-          nickname,
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp(
+      {
+        email,
+        password,
+        options: {
+          data: {
+            name,
+            nickname,
+            profile_image:
+              "https://mfovgoluhkgrvrsobpru.supabase.co/storage/v1/object/public/default_profile_image/profileImage.png?t=2024-09-01T11%3A46%3A01.209Z",
+          },
         },
       },
-    })
+    )
 
-    //supabase signUp 오류 처리 로직
-    if (error) {
+    // Supabase signUp 오류 처리 로직
+    if (signUpError) {
+      console.log("Supabase error:", signUpError)
       toast({
-        title: error.message,
+        title: signUpError.message,
         description: "회원가입을 실패하였습니다.",
+      })
+      return
+    }
+
+    // 사용자 정보를 users 테이블에 추가
+    const userId = signUpData.user?.id // user ID 가져오기
+
+    const { error: insertError } = await supabase.from("users").insert([
+      {
+        user_id: userId,
+        email,
+        name,
+        nickname,
+        profile_image:
+          "https://mfovgoluhkgrvrsobpru.supabase.co/storage/v1/object/public/default_profile_image/profileImage.png?t=2024-09-01T11%3A46%3A01.209Z",
+      },
+    ])
+
+    if (insertError) {
+      console.log("Insert error:", insertError)
+      toast({
+        title: "사용자 정보 추가 실패",
+        description: insertError.message,
       })
       return
     }
@@ -70,6 +98,7 @@ const RegisterPage: React.FC = () => {
   const goToLoginPage = () => {
     route.push("/login")
   }
+
   return (
     <div>
       <Head>

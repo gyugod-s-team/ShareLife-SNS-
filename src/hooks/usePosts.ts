@@ -28,7 +28,7 @@ const usePosts = () => {
   ): Promise<FetchPostsResult> => {
     const { data, error } = await supabase
       .from("posts")
-      .select("*", { count: "exact" })
+      .select(`*, users(nickname, profile_image)`, { count: "exact" })
       .order("created_at", { ascending: false })
       .range((pageParam - 1) * ROWS_PER_PAGE, pageParam * ROWS_PER_PAGE - 1)
 
@@ -89,13 +89,32 @@ const usePosts = () => {
       })
       return
     }
-    const { error } = await supabase.from("posts").insert([newPost])
+
+    const { title, content, image_url, user_id } = newPost
+    const { error } = await supabase
+      .from("posts")
+      .insert([{ title, content, user_id, image_url }])
     if (error) {
+      console.log("게시글 작성 중 오류:", error.message)
       toast({
         title: "게시글 작성 중 오류가 발생하였습니다.",
         description: error.message,
       })
     } else {
+      // // 게시글 작성 후 사용자 정보 가져오기
+      // const { data: userData, error: userError } = await supabase
+      //   .from("users")
+      //   .select("nickname, profile_image")
+      //   .eq("user_id", currentUserId)
+      //   .single()
+
+      // if (userError) {
+      //   console.error("Error fetching user data:", userError.message)
+      // } else {
+      // 게시글 상단에 nickname과 profile_image 추가
+      // console.log("Nickname:", userData.nickname)
+      // console.log("Profile Image:", userData.profile_image)
+      // }
       toast({ title: "게시글이 작성되었습니다." })
       // 새로 작성된 게시글을 포함하여 데이터를 다시 불러옵니다.
       queryClient.invalidateQueries({ queryKey: ["posts"] })
@@ -141,9 +160,7 @@ const usePosts = () => {
   }
 
   const handleCreatePost = async () => {
-    const uploadedImageUrl = imageFile
-      ? await uploadImage(imageFile)
-      : imagePreview
+    const uploadedImageUrl = imageFile ? await uploadImage(imageFile) : null
 
     if (!uploadedImageUrl) {
       toast({
@@ -189,55 +206,11 @@ const usePosts = () => {
     }
   }
 
-  // const handleCreateOrUpdatePost = async () => {
-  //   if (editPostId) {
-  //     await handleUpdatePost()
-  //   } else {
-  //     await handleCreatePost()
-  //   }
-
-  // // 모달 닫기 및 폼 리셋
-  // resetForm()
-  // setShowModal(false)
-  // }
-
-  // const handleCreateOrUpdatePost = async () => {
-  //   const uploadedImageUrl = imageFile
-  //     ? await uploadImage(imageFile)
-  //     : imagePreview
-
-  //   if (!uploadedImageUrl) {
-  //     toast({
-  //       title: "이미지를 포함하지 않았습니다",
-  //       description: "이미지를 추가해주세요.",
-  //     })
-  //     return
-  //   }
-
-  //   const postData: NewPost = {
-  //     title,
-  //     content,
-  //     image_url: uploadedImageUrl,
-  //     user_id: currentUserId, // 현재 사용자 ID를 넣어줍니다
-  //   }
-
-  //   if (editPostId) {
-  //     await updatePost(uploadedImageUrl)
-  //   } else {
-  //     await createPost(postData)
-  //   }
-
-  //   // 모달 닫기 및 폼 리셋
-  //   resetForm()
-  //   setShowModal(false)
-  // }
-
   const handleEditPost = (post: Post) => {
     setEditPostId(post.id)
     setTitle(post.title)
     setContent(post.content)
     setImagePreview(post.image_url)
-    // setShowModal(true)
   }
 
   const resetForm = () => {
