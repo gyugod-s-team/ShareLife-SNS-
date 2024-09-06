@@ -78,4 +78,24 @@
     </th>
   </tr>
 </table>  
+<table>
+  <tr>
+    <th align="center">
+      <img src="https://github.com/user-attachments/assets/e5a102f9-09a9-465e-bfb3-e586d0cecddb" alt="Supabase" width="50px" height="50px" style="max-width: 100%;">
+      <p>Supabase</p>
+    </th>
+    <th align="center">
+      <img src="https://github.com/user-attachments/assets/f10e767e-cc5c-41fa-b76d-66303ce19a1b" alt="Vercel" width="50px" height="50px" style="max-width: 100%;">
+      <p>Vercel</p>
+    </th>
+        <th align="center">
+      <img src="https://github.com/user-attachments/assets/73683cf0-d9ee-48ee-a3dc-41e0614a3b41" alt="Tailwind CSS" width="50px" height="50px" style="max-width: 100%;">
+      <p>Tailwind CSS</p>
+    </th>
+
+
+</table>  
+
+
+
 
