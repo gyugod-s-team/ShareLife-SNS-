@@ -38,9 +38,6 @@
       <img src="https://github.com/user-attachments/assets/09c362d3-3fb8-42bd-9a6e-4d34882df65b" alt="TypeScript" width="50px" height="50px" style="max-width: 100%;">
       <p>TypeScript</p>
     </th>
-        <th align="center">
-      <img src="https://github.com/user-attachments/assets/09c362d3-3fb8-42bd-9a6e-4d34882df65b" alt="TypeScript" width="50px" height="50px" style="max-width: 100%;">
-      <p>TypeScript</p>
     </th>
   </tr>
 </table>
@@ -52,7 +49,7 @@
     </th>
     <th align="center">
       <img src="https://github.com/user-attachments/assets/c5ce84df-d47b-48eb-86cf-f0bffa4fec18" alt="Tanstack Query" width="50px" height="50px" style="max-width: 100%;">
-      <p>React-Query</p>
+      <p>TanStack Query</p>
     </th>
     <th align="center">
       <img src="https://github.com/user-attachments/assets/77782e7c-dbb3-420d-b6b3-6e287bbb9196" alt="Zustand" width="50px" height="50px" style="max-width: 100%;">
@@ -61,6 +58,10 @@
     <th align="center">
       <img src="https://github.com/user-attachments/assets/ab3c5285-d954-49d5-82fa-532607a6e9a8" alt="ShadCN/UI" width="50px" height="50px" style="max-width: 100%;">
       <p>ShadCN/UI</p>
+    </th>
+        <th align="center">
+      <img src="https://github.com/user-attachments/assets/73683cf0-d9ee-48ee-a3dc-41e0614a3b41" alt="Tailwind CSS" width="50px" height="50px" style="max-width: 100%;">
+      <p>Tailwind CSS</p>
     </th>
         <th align="center">
       <img src="https://github.com/user-attachments/assets/700b75a5-20fa-454f-be73-76c37860be87" alt="Zod" width="50px" height="50px" style="max-width: 100%;">
@@ -88,13 +89,7 @@
       <img src="https://github.com/user-attachments/assets/f10e767e-cc5c-41fa-b76d-66303ce19a1b" alt="Vercel" width="50px" height="50px" style="max-width: 100%;">
       <p>Vercel</p>
     </th>
-        <th align="center">
-      <img src="https://github.com/user-attachments/assets/73683cf0-d9ee-48ee-a3dc-41e0614a3b41" alt="Tailwind CSS" width="50px" height="50px" style="max-width: 100%;">
-      <p>Tailwind CSS</p>
-    </th>
-
-
-</table>  
+    </table>  
 
 
 
