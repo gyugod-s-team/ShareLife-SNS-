@@ -22,7 +22,7 @@
 
 ## 웹 사이트 소개
 **Share Life**는 사진으로 일상 생활을 공유하는 SNS 사이트입니다.
-<img src='file:///C:/Users/User/Downloads/Develope%20skill%20icon/HTML.svg' width='100' height='100'></img>
+<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' width='100' height='100'></img>
 <img src='https://github.com/user-attachments/assets/8a1951f9-26f0-417d-ab04-ec424bd655db' width='100' height='100'></img>
 <img src='https://github.com/user-attachments/assets/9e74125b-543e-40a7-81b4-7ddf707cf2ca' width='100' height='100'></img>
 <img src='' width='100' height='100'></img>
