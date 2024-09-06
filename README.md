@@ -24,7 +24,24 @@
 **Share Life**는 사진으로 일상 생활을 공유하는 SNS 사이트입니다.
 
 ## 기술 스택
-
+<table>
+  <tr>
+    <th align="center">
+      <img src="이미지_URL_1" alt="HTML5" width="50px" height="50px" style="max-width: 100%;">
+      <p>HTML5</p>
+    </th>
+    <th align="center">
+      <img src="이미지_URL_2" alt="CSS3" width="50px" height="50px" style="max-width: 100%;">
+      <p>CSS3</p>
+    </th>
+    <th align="center">
+      <img src="이미지_URL_3" alt="TypeScript" width="50px" height="50px" style="max-width: 100%;">
+      <p>TypeScript</p>
+    </th>
+    <!-- 추가 기술 스택 -->
+  </tr>
+</table>
+==========================
 <th align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5206020f736992bcb8c69db0378b675c6a0bc868c1d7d7bcb6605bfbbde8ad2b/68747470733a2f2f70726f66696c696e61746f722e7269736861762e6465762f736b696c6c732d6173736574732f68746d6c352d6f726967696e616c2d776f72646d61726b2e737667"><img src="[https://camo.githubusercontent.com/5206020f736992bcb8c69db0378b675c6a0bc868c1d7d7bcb6605bfbbde8ad2b/68747470733a2f2f70726f66696c696e61746f722e7269736861762e6465762f736b696c6c732d6173736574732f68746d6c352d6f726967696e616c2d776f72646d61726b2e737667](https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431)" alt="HTML5" width="50px" height="50px" data-canonical-src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" style="max-width: 100%;"></a></th>
 
 <th align="center"><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5206020f736992bcb8c69db0378b675c6a0bc868c1d7d7bcb6605bfbbde8ad2b/68747470733a2f2f70726f66696c696e61746f722e7269736861762e6465762f736b696c6c732d6173736574732f68746d6c352d6f726967696e616c2d776f72646d61726b2e737667"><img src="[https://camo.githubusercontent.com/5206020f736992bcb8c69db0378b675c6a0bc868c1d7d7bcb6605bfbbde8ad2b/68747470733a2f2f70726f66696c696e61746f722e7269736861762e6465762f736b696c6c732d6173736574732f68746d6c352d6f726967696e616c2d776f72646d61726b2e737667](https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431)" alt="HTML5" width="50px" height="50px" data-canonical-src="https://profilinator.rishav.dev/skills-assets/html5-original-wordmark.svg" style="max-width: 100%;"></a></th>
