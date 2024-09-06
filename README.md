@@ -47,20 +47,34 @@
 <table>
   <tr>
     <th align="center">
-      <img src="  https://github.com/user-attachments/assets/554c3f68-6f06-4426-b96a-663de1c0662a" alt="Tanstack Query" width="50px" height="50px" style="max-width: 100%;">
+      <img src="https://github.com/user-attachments/assets/6e6fd106-e5af-4ca0-9fff-88ebbad214cc" alt="Next.js" width="50px" height="50px" style="max-width: 100%;">
+      <p>Next.js</p>
+    </th>
+    <th align="center">
+      <img src="https://github.com/user-attachments/assets/c5ce84df-d47b-48eb-86cf-f0bffa4fec18" alt="Tanstack Query" width="50px" height="50px" style="max-width: 100%;">
       <p>React-Query</p>
     </th>
     <th align="center">
-      <img src="https://github.com/user-attachments/assets/cd547883-b9af-4dfa-8f79-0a5fdc830b96" alt="Zustand" width="50px" height="50px" style="max-width: 100%;">
+      <img src="https://github.com/user-attachments/assets/77782e7c-dbb3-420d-b6b3-6e287bbb9196" alt="Zustand" width="50px" height="50px" style="max-width: 100%;">
       <p>Zustand(예정)</p>
     </th>
     <th align="center">
-      <img src="https://github.com/user-attachments/assets/0563f219-2bd7-457b-a325-be776935b4c4" alt="ShadCN/UI" width="50px" height="50px" style="max-width: 100%;">
+      <img src="https://github.com/user-attachments/assets/ab3c5285-d954-49d5-82fa-532607a6e9a8" alt="ShadCN/UI" width="50px" height="50px" style="max-width: 100%;">
       <p>ShadCN/UI</p>
     </th>
         <th align="center">
       <img src="https://github.com/user-attachments/assets/700b75a5-20fa-454f-be73-76c37860be87" alt="Zod" width="50px" height="50px" style="max-width: 100%;">
       <p>Zod</p>
+    </th>
+        </th>
+        <th align="center">
+      <img src="https://github.com/user-attachments/assets/18aacac6-b6d2-4fd0-9c39-acdf75e97fd1" alt="React Hook Form" width="50px" height="50px" style="max-width: 100%;">
+      <p>React Hook Form</p>
+    </th>
+        </th>
+        <th align="center">
+      <img src="https://github.com/user-attachments/assets/d21ebe1d-9fe4-4557-a19e-8d07cdcb7112" alt="NextAuth.js" width="50px" height="50px" style="max-width: 100%;">
+      <p>NextAuth.js</p>
     </th>
   </tr>
 </table>  
