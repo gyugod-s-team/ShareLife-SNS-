@@ -23,6 +23,6 @@
 
 ## 웹 사이트 소개
 **Share Life**는 사진으로 일상 생활을 공유하는 SNS 사이트입니다.
-![image](https://github.com/user-attachments/assets/c059d6dd-ba9a-4a72-81e2-f3a984b7599c)
+![image](<img width='20px' height='20px'>https://github.com/user-attachments/assets/c059d6dd-ba9a-4a72-81e2-f3a984b7599c</img>)
 
 ## 기술 스택
