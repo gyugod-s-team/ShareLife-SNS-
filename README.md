@@ -26,7 +26,7 @@
 ## 기술 스택
 <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
     <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
-<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' width='100' height='100' /><p>HTML5</p>
+<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' style="display: block; margin: 0 auto;" width="100" height="100" /><p style="margin-top: 10px;">HTML5</p>
     </div>
           <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; text-align: center; width: 120px;">
 <img src='https://github.com/user-attachments/assets/ae9db30b-ded1-4293-9465-44d28008da47' width='100' height='100'>CSS3</img>
