@@ -22,9 +22,25 @@
 
 ## 웹 사이트 소개
 **Share Life**는 사진으로 일상 생활을 공유하는 SNS 사이트입니다.
-<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' width='100' height='100'></img>
-<img src='https://github.com/user-attachments/assets/8a1951f9-26f0-417d-ab04-ec424bd655db' width='100' height='100'></img>
-<img src='https://github.com/user-attachments/assets/9e74125b-543e-40a7-81b4-7ddf707cf2ca' width='100' height='100'></img>
+<img src='https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431' width='100' height='100'>HTML5</img>
+<img src='https://github.com/user-attachments/assets/ae9db30b-ded1-4293-9465-44d28008da47' width='100' height='100'>CSS3</img>
+<img src='https://github.com/user-attachments/assets/09c362d3-3fb8-42bd-9a6e-4d34882df65b' width='100' height='100'></img>
+<img src='https://github.com/user-attachments/assets/90b481fa-feff-4fc6-a72f-a35e81d06918' width='100' height='100'></img>
+<img src='https://github.com/user-attachments/assets/b8e7b005-c293-4ab7-9b65-af7fe948d738' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
+<img src='' width='100' height='100'></img>
 <img src='' width='100' height='100'></img>
 <img src='' width='100' height='100'></img>
 
