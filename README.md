@@ -3,7 +3,13 @@
   <img src="https://github.com/user-attachments/assets/a81a30aa-33c6-4451-95df-e0249d612c71" alt="Logo" width="50%" />
 </p>
 
+## 웹 서비스 소개
+
+**Share Life**는 사진으로 일상 생활을 공유하는 SNS 서비스입니다.
+
+
 ## 서비스 개요
+
 > 개발 기간 : 2024.08 ~ 2024.09
 
  
@@ -27,8 +33,11 @@
 </tbody>
 </table>
 
+> 서비스를 구경하고 싶으시면 상단의 계정 정보로 로그인 후 사용하실 수 있습니다.
+
 
 ## 📚 기술 스택
+
 <div>
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
 <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
@@ -81,13 +90,8 @@
   </tbody>
 </table>
 
-
-<details>
-  <summary>폴더 구조</summary>
-  <br>
-<div class="snippet-clipboard-content notranslate position-relative overflow-auto">
-  <pre class="notranslate">
-    <code>
+### 폴더 구조
+```
 📁 public
 ├──📁 assets
 │   ├──📁 icons(아직 미사용)
@@ -124,84 +128,64 @@
 📁 styles
 │
 📁 types
-</code>
-  </pre>
-  <div class="zeroclipboard-container">
-  </details>
-
+```
 <markdown-accessiblity-table data-catalyst=""><table>
 <thead>
 <tr>
 <th>폴더명</th>
-<th></th>
 <th>설명</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>components</code></td>
-<td>각 페이지별 컴포넌트를 모아놓은 폴더</td>
-<td></td>
+<td><code>api</code></td>
+<td>api 관련 파일 넣어놓은 폴더</td>
 </tr>
 <tr>
-<td><code>components</code></td>
-<td><code>common</code></td>
-<td>재사용 가능한 컴포넌트를 모아놓은 폴더</td>
+<td><code>home</code></td>
+<td>메인 페이지 관련 폴더</td>
 </tr>
 <tr>
-<td><code>app</code></td>
-<td>각 페이지를 모아놓은 폴더</td>
-<td></td>
+<td><code>login</code></td>
+<td>로그인 페이지 관련 폴더</td>
+</tr>
+<tr>
+<td><code>profile</code></td>
+<td>프로필 페이지 관련 폴더</td>
+</tr>
+<tr>
+<td><code>components/ui</code></td>
+<td>ShadCN/UI 관련 폴더</td>
 </tr>
 <tr>
 <td><code>hooks</code></td>
-<td>커스텀 훅 선언</td>
-<td></td>
+<td>훅 관련된 폴더</td>
 </tr>
 <tr>
-<td><code>interface</code></td>
-<td>타입에 대한 정의를 모아놓은 폴더</td>
-<td></td>
+<td><code>lib</code></td>
+<td>폴더</td>
 </tr>
 <tr>
-<td><code>layout</code></td>
-<td>컴포넌트 페이지 레이아웃을 모아놓은 폴더</td>
-<td></td>
+<td><code>providers</code></td>
+<td> 폴더</td>
 </tr>
 <tr>
-<td><code>pages</code></td>
-<td>컴포넌트 페이지를 모아놓은 폴더</td>
-<td></td>
-</tr>
-<tr>
-<td><code>router</code></td>
-<td>페이지 라우터 컴포넌트들을 모아놓은 폴더</td>
-<td></td>
-</tr>
-<tr>
-<td><code>service</code></td>
-<td>서버와 관련된 config 폴더</td>
-<td></td>
-</tr>
-<tr>
-<td><code>store</code></td>
-<td>전역 상태를 관리하기 위한 폴더</td>
-<td></td>
+<td><code>stores</code></td>
+<td>Zustand 상태관리 관련된 폴더</td>
 </tr>
 <tr>
 <td><code>styles</code></td>
-<td>전역 스타일을 관리학 위한 폴더</td>
-<td></td>
+<td>스타일 관련된 폴더</td>
 </tr>
 <tr>
-<td><code>utils</code></td>
-<td>유틸 함수를 모아놓은 폴더</td>
-<td></td>
+<td><code>types</code></td>
+<td>타입 관련된 폴더</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
 
 ## 기능 소개
+
 **(시연 영상??)**
 + **로그인 / 회원가입**
   + Zod를 이용한 **폼 유효성 검증**(이메일 형식, 대소문자+특수문자+8자 이상 비밀번호, 2자 이상 이름 및 닉네임)
@@ -221,17 +205,14 @@
   + Supabase Realtime를 이용한 **실시간 업데이트**
  
 ## 성능 최적화
+
 아직 최적화 중
 
 ## 트러블 슈팅
+
 너무 많고 짜잘해서 다 넣을지 뺄지 고민중(최적화 아직 안끝남)
 
 =================================================================================
-
-## 목차
-[1. 웹 서비스 소개](#웹-서비스-소개)<br>
-[2. 기술 스택](#기술-스택)<br>
-[3. 주요 기능](#주요-기능)<br>
 
 4. 주요 기능
 5. 데모 영상
@@ -247,33 +228,5 @@
 15. 기여 방법
 16. 라이센스
 17. 연락처
-
-## 웹 서비스 소개
-**Share Life**는 사진으로 일상 생활을 공유하는 SNS 서비스입니다.
-
-+ 'Share Life' 계정 정보
-<table>
-<thead>
-<tr>
-<th align="center">아이디</th>
-<th align="left"><a href="mailto:test01@test.com">test01@test.com</a></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">비밀번호</td>
-<td align="left">Test1234!</td>
-</tr>
-</tbody>
-</table>
-> 서비스를 구경하고 싶으시면 상단의 계정 정보로 로그인 후 사용하실 수 있습니다.
-
-
-
-
-## 주요 기능
-### [회원가입]
-+ 이메일 / 비밀번호
-  + 
 
 
