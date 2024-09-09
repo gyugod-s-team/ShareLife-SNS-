@@ -27,6 +27,28 @@
 </tbody>
 </table>
 
+
+## 📚 기술 스택
+<div>
+<img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+<img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+<img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+<br>
+
+<img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white">
+<img src="https://img.shields.io/badge/nextauth.js-000000?style=for-the-badge&logo=nextauth.js&logoColor=white">
+<img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white">
+<img src="https://img.shields.io/badge/zustand-000000?style=for-the-badge&logo=zustand&logoColor=white">
+<img src="https://img.shields.io/badge/zod-3178C6?style=for-the-badge&logo=custom">
+<img src="https://img.shields.io/badge/react%20hook%20form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
+<br> 
+
+<img src="https://img.shields.io/badge/shadcn/ui-7289DA?style=for-the-badge&logo=custom">
+<img src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white">
+<img src="https://img.shields.io/badge/supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white">
+<img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+</div>
+
 ## 프로젝트 구성도
 
 <table>
@@ -53,7 +75,7 @@
 <tbody>
   <tr>
      <td align="center">
-          <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/259d967c-51a5-46fd-8bcf-d37839aa840e"><img src="https://github.com/user-attachments/assets/259d967c-51a5-46fd-8bcf-d37839aa840e" alt="ERD" width="1000px" style="max-width: 100%;"></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/259d967c-51a5-46fd-8bcf-d37839aa840e"><img src="https://github.com/user-attachments/assets/259d967c-51a5-46fd-8bcf-d37839aa840e" alt="ERD" width="800px" style="max-width: 100%;"></a>
         </td>
     </tr>
   </tbody>
@@ -107,73 +129,77 @@
   <div class="zeroclipboard-container">
   </details>
 
-## 기술 스택
-<table>
-  <tr>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/ee5c1862-f414-4fa8-b792-bd7844692431" alt="HTML5" width="50px" height="50px" style="max-width: 100%;">
-      <p>HTML5</p>
-    </th>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/ae9db30b-ded1-4293-9465-44d28008da47" alt="CSS3" width="50px" height="50px" style="max-width: 100%;">
-      <p>CSS3</p>
-    </th>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/09c362d3-3fb8-42bd-9a6e-4d34882df65b" alt="TypeScript" width="50px" height="50px" style="max-width: 100%;">
-      <p>TypeScript</p>
-    </th>
-    </th>
-  </tr>
-</table>
-<table>
-  <tr>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/6e6fd106-e5af-4ca0-9fff-88ebbad214cc" alt="Next.js" width="50px" height="50px" style="max-width: 100%;">
-      <p>Next.js</p>
-    </th>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/c5ce84df-d47b-48eb-86cf-f0bffa4fec18" alt="Tanstack Query" width="50px" height="50px" style="max-width: 100%;">
-      <p>TanStack Query</p>
-    </th>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/77782e7c-dbb3-420d-b6b3-6e287bbb9196" alt="Zustand" width="50px" height="50px" style="max-width: 100%;">
-      <p>Zustand(예정)</p>
-    </th>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/ab3c5285-d954-49d5-82fa-532607a6e9a8" alt="ShadCN/UI" width="50px" height="50px" style="max-width: 100%;">
-      <p>ShadCN/UI</p>
-    </th>
-        <th align="center">
-      <img src="https://github.com/user-attachments/assets/73683cf0-d9ee-48ee-a3dc-41e0614a3b41" alt="Tailwind CSS" width="50px" height="50px" style="max-width: 100%;">
-      <p>Tailwind CSS</p>
-    </th>
-        <th align="center">
-      <img src="https://github.com/user-attachments/assets/700b75a5-20fa-454f-be73-76c37860be87" alt="Zod" width="50px" height="50px" style="max-width: 100%;">
-      <p>Zod</p>
-    </th>
-        </th>
-        <th align="center">
-      <img src="https://github.com/user-attachments/assets/18aacac6-b6d2-4fd0-9c39-acdf75e97fd1" alt="React Hook Form" width="50px" height="50px" style="max-width: 100%;">
-      <p>React Hook Form</p>
-    </th>
-        </th>
-        <th align="center">
-      <img src="https://github.com/user-attachments/assets/d21ebe1d-9fe4-4557-a19e-8d07cdcb7112" alt="NextAuth.js" width="50px" height="50px" style="max-width: 100%;">
-      <p>NextAuth.js</p>
-    </th>
-  </tr>
-</table>  
-<table>
-  <tr>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/e5a102f9-09a9-465e-bfb3-e586d0cecddb" alt="Supabase" width="50px" height="50px" style="max-width: 100%;">
-      <p>Supabase</p>
-    </th>
-    <th align="center">
-      <img src="https://github.com/user-attachments/assets/f10e767e-cc5c-41fa-b76d-66303ce19a1b" alt="Vercel" width="50px" height="50px" style="max-width: 100%;">
-      <p>Vercel</p>
-    </th>
-    </table>  
+<markdown-accessiblity-table data-catalyst=""><table>
+<thead>
+<tr>
+<th>폴더명</th>
+<th></th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>components</code></td>
+<td>각 페이지별 컴포넌트를 모아놓은 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>components</code></td>
+<td><code>common</code></td>
+<td>재사용 가능한 컴포넌트를 모아놓은 폴더</td>
+</tr>
+<tr>
+<td><code>app</code></td>
+<td>각 페이지를 모아놓은 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>hooks</code></td>
+<td>커스텀 훅 선언</td>
+<td></td>
+</tr>
+<tr>
+<td><code>interface</code></td>
+<td>타입에 대한 정의를 모아놓은 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>layout</code></td>
+<td>컴포넌트 페이지 레이아웃을 모아놓은 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>pages</code></td>
+<td>컴포넌트 페이지를 모아놓은 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>router</code></td>
+<td>페이지 라우터 컴포넌트들을 모아놓은 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>service</code></td>
+<td>서버와 관련된 config 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td>전역 상태를 관리하기 위한 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>styles</code></td>
+<td>전역 스타일을 관리학 위한 폴더</td>
+<td></td>
+</tr>
+<tr>
+<td><code>utils</code></td>
+<td>유틸 함수를 모아놓은 폴더</td>
+<td></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 
 ## 기능 소개
 **(시연 영상??)**
