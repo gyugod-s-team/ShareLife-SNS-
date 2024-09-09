@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
-const Providers = ({ children }: React.PropsWithChildren) => {
+const QueryProvider = ({ children }: React.PropsWithChildren) => {
   const [client] = React.useState(new QueryClient())
 
   return (
@@ -16,4 +16,4 @@ const Providers = ({ children }: React.PropsWithChildren) => {
   )
 }
 
-export default Providers
+export default QueryProvider
