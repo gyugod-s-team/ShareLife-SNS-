@@ -7,10 +7,6 @@ type LikeCounts = {
   [postId: number]: number
 }
 
-type UseLikeProps = {
-  currentUserId: string
-}
-
 const useLike = () => {
   const { currentUserId } = useAuth()
   const [likedPosts, setLikedPosts] = useState<number[]>([])
@@ -24,6 +20,7 @@ const useLike = () => {
       .from("likes")
       .select("post_id")
       .eq("user_id", currentUserId)
+      .returns<{ post_id: number }[]>()
 
     if (error) {
       setError("Error fetching likes")

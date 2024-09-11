@@ -61,7 +61,7 @@ const HomePage = () => {
                     height={100}
                   />
                   <span
-                    onClick={() => handleProfileClick(post.user_id)}
+                    onClick={() => handleProfileClick(post.users.user_id)}
                     className="cursor-pointer font-semibold"
                   >
                     {post.users.nickname} {/* 닉네임 */}

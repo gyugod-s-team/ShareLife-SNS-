@@ -1,5 +1,5 @@
 import useLike from "@/hooks/useLike"
-import React from "react"
+import React, { useEffect } from "react"
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"
 
 const LikeButton: React.FC<{ postId: number }> = ({ postId }) => {

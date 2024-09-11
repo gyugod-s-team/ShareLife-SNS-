@@ -43,6 +43,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   const fetchProfile = async () => {
     try {
       const profileData = await fetchPostUserData(id) // 프로필 데이터 가져오는 함수
+      console.log(profileData, "111111111111111")
       setProfile(profileData)
       const followingStatus = await checkIsFollowingUser(id)
       setIsFollowing(followingStatus)
@@ -57,8 +58,6 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   // useEffect로 프로필 데이터 불러오기
   useEffect(() => {
     fetchProfile()
-    fetchFollowers(id) // 팔로워 목록 초기화
-    fetchFollowing(id) // 팔로잉 목록 초기화
   }, [id])
 
   // 팔로우 상태 토글
@@ -100,7 +99,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
   const handleShowFollowing = async () => {
     try {
       setLoadingFollowing(true)
-      await fetchFollowing(id)
+      await fetchFollowing(currentUserId)
       setFollowingModalOpen(true)
     } catch (error) {
       toast({
@@ -150,7 +149,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
             <span className="font-bold text-lg">{profile.nickname}</span>
           </>
         )}
-        {id !== currentUserId && ( // 본인이 아닐 경우에만 팔로우 버튼 표시
+        {id !== currentUserId && (
           <button
             onClick={handleToggleFollow}
             className={`ml-4 px-4 py-2 text-white ${

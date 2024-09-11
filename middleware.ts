@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server"
 const secret = process.env.NEXTAUTH_SECRET as string
 
 export async function middleware(request: NextRequest) {
-  console.log("middleware")
   const token = await getToken({ req: request, secret })
 
   // 인증된 사용자만 접근할 수 있는 페이지 경로

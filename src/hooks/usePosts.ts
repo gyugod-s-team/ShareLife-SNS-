@@ -28,14 +28,15 @@ const usePosts = () => {
   ): Promise<FetchPostsResult> => {
     const { data, error } = await supabase
       .from("posts")
-      .select(`*, users(nickname, profile_image)`, { count: "exact" })
+      .select(`*, users(user_id, nickname, profile_image)`, { count: "exact" })
       .order("created_at", { ascending: false })
       .range((pageParam - 1) * ROWS_PER_PAGE, pageParam * ROWS_PER_PAGE - 1)
+      .returns<Post[]>()
 
     if (error) {
       throw new Error(error.message)
     }
-
+    console.log(data, "data!!!!!!!!!!!!!!!!!!!")
     return {
       data: data || [],
       nextPage: data?.length === ROWS_PER_PAGE ? pageParam + 1 : undefined,

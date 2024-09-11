@@ -11,6 +11,7 @@ export type Post = {
 export type User = {
   nickname: string
   profile_image: string
+  user_id: string
 }
 
 export type NewPost = Omit<Post, "id" | "created_at" | "users">
