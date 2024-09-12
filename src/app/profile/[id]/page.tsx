@@ -59,7 +59,7 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
     fetchProfile()
     fetchFollowers(id) // 팔로워 목록 초기화
     fetchFollowing(id) // 팔로잉 목록 초기화
-  }, [id])
+  }, [id, fetchProfile, fetchFollowers, fetchFollowing])
 
   // 팔로우 상태 토글
   const handleToggleFollow = async () => {
@@ -140,13 +140,21 @@ const ProfilePage = ({ params }: { params: { id: string } }) => {
       <div className="flex items-center mb-2">
         {profile && (
           <>
-            <Image
+            {/* <Image
               src={profile.profile_image || "/default-profile.png"}
               alt={`${profile.nickname || "User"}'s profile`}
               className="w-10 h-10 rounded-full mr-2"
               width={100}
               height={100}
+            /> */}
+            <img
+              src={profile.profile_image || "/default-profile.png"}
+              alt={`${profile.nickname || "User"}'s profile`}
+              className="w-10 h-10 rounded-full mr-2"
+              width="100"
+              height="100"
             />
+
             <span className="font-bold text-lg">{profile.nickname}</span>
           </>
         )}

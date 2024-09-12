@@ -16,13 +16,20 @@
     "createDefaultProgram": true
   },
   "rules": {
-    "prettier/prettier": ["error"],
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "crlf"
+      }
+    ],
     "react/react-in-jsx-scope": "off",
     "no-console": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
+    "@typescript-eslint/no-empty-object-type": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "ignorePatterns": ["node_modules/"]
 }

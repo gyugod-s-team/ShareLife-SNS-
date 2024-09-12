@@ -53,13 +53,21 @@ const HomePage = () => {
                 className="cursor-pointer"
               >
                 <div className="flex items-center mb-2">
-                  <Image
+                  {/* <Image
                     src={post.users.profile_image} // 프로필 이미지
                     alt={`${post.users.nickname}'s profile`}
                     className="w-10 h-10 rounded-full mr-2"
                     width={100}
                     height={100}
+                  /> */}
+                  <img
+                    src={post.users.profile_image} // 프로필 이미지
+                    alt={`${post.users.nickname}'s profile`}
+                    className="w-10 h-10 rounded-full mr-2"
+                    width="100"
+                    height="100"
                   />
+
                   <span
                     onClick={() => handleProfileClick(post.users.user_id)}
                     className="cursor-pointer font-semibold"

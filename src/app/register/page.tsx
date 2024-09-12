@@ -113,11 +113,17 @@ const RegisterPage: React.FC = () => {
       <Card className="w-[480px]">
         <CardHeader>
           <div className="flex justify-center">
-            <Image
+            {/* <Image
               width={300}
               height={100}
               src="/share life.png"
               alt="Logo Image"
+            /> */}
+            <img
+              src="/share life.png"
+              alt="Logo Image"
+              width="300"
+              height="100"
             />
           </div>
         </CardHeader>

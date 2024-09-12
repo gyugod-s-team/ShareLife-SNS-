@@ -34,6 +34,7 @@ const useComments = (postId: number) => {
       .eq("post_id", postId)
       .order("created_at", { ascending: false })
       .range((pageParam - 1) * ROWS_PER_PAGE, pageParam * ROWS_PER_PAGE - 1)
+      .returns<Comment[]>()
 
     if (error) {
       console.error("댓글 가져오기 오류:", error) // 에러 로깅
