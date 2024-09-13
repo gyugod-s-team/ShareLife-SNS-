@@ -7,8 +7,10 @@ import { useSession } from "next-auth/react"
 const useAuth = () => {
   const { data: session, status } = useSession()
   const [currentUserId, setCurrentUserId] = useState<string>("")
-  const [nickname, setNickname] = useState<string | null>("")
-  const [profileImage, setProfileImage] = useState<string>("")
+  const [nickname, setNickname] = useState<string | null>(null)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
+  const [postNickname, setPostNickname] = useState<string | null>(null)
+  const [postProfileImage, setPostProfileImage] = useState<string | null>(null)
   const route = useRouter()
   const { toast } = useToast()
 
@@ -24,7 +26,10 @@ const useAuth = () => {
       throw new Error(error.message)
     }
 
-    return data
+    if (data) {
+      setPostNickname(data.nickname)
+      setPostProfileImage(data.profile_image)
+    }
   }
 
   useEffect(() => {
@@ -54,7 +59,6 @@ const useAuth = () => {
 
         if (userData) {
           setNickname(userData.nickname)
-          console.log("설정된 닉네임:", userData.nickname) // 추가된 로그
           setProfileImage(userData.profile_image || session.user.image || "")
         }
       }
@@ -82,6 +86,8 @@ const useAuth = () => {
     nickname,
     profileImage,
     handleLogout,
+    postNickname,
+    postProfileImage,
     fetchPostUserData,
   }
 }

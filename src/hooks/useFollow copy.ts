@@ -1,230 +1,226 @@
-// import { useEffect, useState } from "react"
-// import useAuth from "./useAuth"
-// import { supabase } from "@/lib/supabase"
-// import { useToast } from "@/components/ui/use-toast"
+import { useEffect, useState } from "react"
+import { supabase } from "@/lib/supabase"
+import { toast } from "@/components/ui/use-toast"
+import useAuth from "./useAuth"
+import { Database } from "@/types/supabase"
 
-// type FollowCounts = {
-//   followingCount: number
-//   followerCount: number
-// }
+type User = {
+  id: string
+  nickname: string
+  profile_image?: string
+}
 
-// type User = {
-//   id: string
-//   nickname: string
-//   profile_image: string
-// }
+type FollowCounts = {
+  followerCount: number
+  followingCount: number
+}
 
-// type FollowData = {
-//   following_id: string
-//   following: User
-// }
+type FollowQueryResult = {
+  follower: {
+    id: string
+    nickname: string
+    profile_image: string | null
+  }
+  following_id: string
+}
 
-// type FollowerData = {
-//   follower_id: string
-//   follower: User
-// }
+type FollowingQueryResult = {
+  following: {
+    id: string
+    nickname: string
+    profile_image: string | null
+  }
+  follower_id: string
+}
 
-// const useFollow = () => {
-//   const { currentUserId } = useAuth()
-//   const [following, setFollowing] = useState<User[]>([])
-//   const [followers, setFollowers] = useState<User[]>([])
-//   const [followCounts, setFollowCounts] = useState<FollowCounts>({
-//     followingCount: 0,
-//     followerCount: 0,
-//   })
-//   const [error, setError] = useState<string | null>(null)
-//   const { toast } = useToast()
+const useFollow = () => {
+  const { currentUserId } = useAuth()
+  const [followers, setFollowers] = useState<User[]>([])
+  const [following, setFollowing] = useState<User[]>([])
+  const [followCounts, setFollowCounts] = useState<FollowCounts>({
+    followerCount: 0,
+    followingCount: 0,
+  })
+  const [error, setError] = useState<string | null>(null)
+  const [isFollowing, setIsFollowing] = useState<boolean>(false)
 
-//   const fetchFollowing = async (userId: string): Promise<User[]> => {
-//     if (!userId) return []
+  const fetchFollowers = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("follows")
+        .select(
+          `
+        follower:follower_id(id, nickname, profile_image),
+        following_id
+      `,
+        )
+        .eq("following_id", userId)
+        .returns<FollowQueryResult[]>()
 
-//     const { data, error } = await supabase
-//       .from("follows")
-//       .select(`following_id, following: users(id, nickname, profile_image)`)
-//       .eq("follower_id", userId)
+      console.log("Data:", data)
+      console.log("Error:", error)
 
-//     if (error) {
-//       setError("Error fetching following list")
-//       console.error("Error fetching following list:", error)
-//       return []
-//     }
+      if (error) throw error
 
-//     console.log("fetchFollowing data", data)
+      setFollowers(
+        data?.map((item) => ({
+          id: item.follower.id,
+          nickname: item.follower.nickname,
+          profile_image: item.follower.profile_image || undefined,
+        })) || [],
+      )
+    } catch (error) {
+      toast({
+        title: "팔로워 불러오기 실패",
+        description: (error as Error).message,
+      })
+      setError((error as Error).message)
+    }
+  }
 
-//     // data를 FollowData 타입으로 명시하여 처리
-//     return data ? data.map((follow) => follow.following) : []
-//   }
+  const fetchFollowing = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("follows")
+        .select(
+          `
+          following:following_id(user_id, nickname, profile_image),
+          follower_id
+        `,
+        )
+        .eq("follower_id", userId)
+        .returns<FollowingQueryResult[]>()
 
-//   const fetchFollowers = async (userId: string) => {
-//     if (!userId) return []
+      console.log("FollowingData:", data)
 
-//     const { data, error } = await supabase
-//       .from("follows")
-//       .select(`follower_id, follower: users(id, nickname, profile_image)`)
-//       .eq("following_id", userId)
+      if (error) throw error
 
-//     if (error) {
-//       setError("Error fetching followers list")
-//       console.error("Error fetching followers list:", error)
-//       return []
-//     } else {
-//       return data ? data.map((follow) => follow.follower) : []
-//     }
-//   }
+      setFollowing(
+        data?.map((item) => ({
+          id: item.following.id,
+          nickname: item.following.nickname,
+          profile_image: item.following.profile_image || undefined,
+        })) || [],
+      )
+    } catch (error) {
+      toast({
+        title: "팔로잉 불러오기 실패",
+        description: (error as Error).message,
+      })
+      setError((error as Error).message)
+    }
+  }
 
-//   const fetchFollowCounts = async (userId: string) => {
-//     if (!userId) return
+  const fetchFollowCounts = async (userId: string) => {
+    try {
+      // 팔로워 수
+      const { count: followerCount, error: followerError } = await supabase
+        .from("follows")
+        .select("*", { count: "exact" })
+        .eq("following_id", userId)
 
-//     try {
-//       const [{ count: followingCount }, { count: followerCount }] =
-//         await Promise.all([
-//           supabase
-//             .from("follows")
-//             .select("*", { count: "exact", head: true })
-//             .eq("follower_id", userId),
-//           supabase
-//             .from("follows")
-//             .select("*", { count: "exact", head: true })
-//             .eq("following_id", userId),
-//         ])
+      if (followerError) throw followerError
 
-//       setFollowCounts({
-//         followingCount: followingCount || 0,
-//         followerCount: followerCount || 0,
-//       })
-//     } catch (error) {
-//       setError("Error fetching follow counts")
-//       console.error("Error fetching follow counts:", error)
-//       toast({
-//         title: "팔로우 카운트 가져오기 실패",
-//         description: (error as Error).message,
-//       })
-//     }
-//   }
+      // 팔로잉 수
+      const { count: followingCount, error: followingError } = await supabase
+        .from("follows")
+        .select("*", { count: "exact" })
+        .eq("follower_id", userId)
 
-//   const toggleFollow = async (userId: string) => {
-//     if (!currentUserId || currentUserId === userId) return
+      if (followingError) throw followingError
 
-//     const isFollowing = following.some((user) => user.id === userId)
+      setFollowCounts({
+        followerCount: followerCount || 0,
+        followingCount: followingCount || 0,
+      })
+    } catch (err) {
+      setError("Error fetching follow counts")
+      console.error("Error fetching follow counts:", err)
+    }
+  }
 
-//     if (isFollowing) {
-//       // 언팔로우 처리
-//       const { error: deleteError } = await supabase
-//         .from("follows")
-//         .delete()
-//         .eq("follower_id", currentUserId)
-//         .eq("following_id", userId)
-//       if (deleteError) {
-//         toast({
-//           title: "팔로우 취소 중 오류가 발생하였습니다",
-//           description: deleteError.message,
-//         })
-//       } else {
-//         // UI 업데이트
-//         setFollowing((prevFollowing) =>
-//           prevFollowing.filter((user) => user.id !== userId),
-//         )
-//         fetchFollowCounts(currentUserId) // update follow counts for current user
-//       }
-//     } else {
-//       //팔로우 처리 전 해당 유저 정보 조회
-//       const { data: user, error: userError } = await supabase
-//         .from("users")
-//         .select("nickname, profile_image")
-//         .eq("user_id", userId)
-//         .single()
+  const toggleFollow = async (userId: string) => {
+    if (!currentUserId) return
 
-//       if (userError || !user) {
-//         toast({
-//           title: "유저 정보를 가져오는데 오류가 발생했습니다.",
-//           description: userError?.message || "유저 정보를 찾을 수 없습니다.",
-//         })
-//         return
-//       }
+    let isFollowing: boolean
 
-//       // 팔로우 처리
-//       const { error: insertError } = await supabase
-//         .from("follows")
-//         .insert([{ follower_id: currentUserId, following_id: userId }])
+    try {
+      isFollowing = following.some((user) => user.id === userId)
 
-//       if (insertError) {
-//         toast({
-//           title: "팔로우 추가 중 오류가 발생했습니다.",
-//           description: insertError.message,
-//         })
-//       } else {
-//         setFollowing((prevFollowing) => [...prevFollowing, user])
-//         fetchFollowCounts(currentUserId)
-//         // // UI 업데이트
-//         // const newUser = { id: userId, nickname: "", profile_image: null } // 사용자 정보를 가져와야 함
-//         // setFollowing((prevFollowing) => [...prevFollowing, newUser])
-//         // fetchFollowCounts(currentUserId) // update follow counts for current user
-//       }
-//     }
-//   }
+      // 팔로우 상태를 즉시 업데이트
+      setFollowing((prevFollowing) => {
+        if (isFollowing) {
+          return prevFollowing.filter((user) => user.id !== userId)
+        } else {
+          return [
+            ...prevFollowing,
+            { id: userId, nickname: "", profile_image: "" },
+          ]
+        }
+      })
 
-//   useEffect(() => {
-//     if (!currentUserId) return
+      // 데이터베이스에서 팔로우 추가 또는 삭제
+      if (isFollowing) {
+        const { error } = await supabase
+          .from("follows")
+          .delete()
+          .eq("follower_id", currentUserId)
+          .eq("following_id", userId)
 
-//     const fetchInitialData = async () => {
-//       try {
-//         const initialFollowing = await fetchFollowing(currentUserId)
-//         setFollowing(initialFollowing)
-//         const initialFollowers = await fetchFollowers(currentUserId)
-//         setFollowers(initialFollowers)
-//         await fetchFollowCounts(currentUserId)
-//       } catch (error) {
-//         console.error("Error fetching initial data:", error)
-//         setError("Error fetching initial data")
-//       }
-//     }
+        if (error) throw error
+      } else {
+        const { error } = await supabase
+          .from("follows")
+          .insert([{ follower_id: currentUserId, following_id: userId }])
 
-//     fetchInitialData()
+        if (error) throw error
+      }
 
-//     // 실시간 업데이트 구독
-//     const channel = supabase
-//       .channel("follows")
-//       .on(
-//         "postgres_changes",
-//         { event: "*", schema: "public", table: "follows" },
-//         async (payload) => {
-//           if (
-//             payload.eventType === "INSERT" ||
-//             payload.eventType === "DELETE"
-//           ) {
-//             // 팔로우/언팔로우 발생 시 목록 다시 불러오기
-//             const updatedFollowing = await fetchFollowing(currentUserId)
-//             setFollowing(updatedFollowing)
-//             const updatedFollowers = await fetchFollowers(currentUserId)
-//             setFollowers(updatedFollowers)
-//             await fetchFollowCounts(currentUserId)
-//           }
-//         },
-//       )
-//       .subscribe()
+      // 팔로우 카운트를 업데이트
+      await fetchFollowCounts(currentUserId)
+    } catch (err) {
+      console.error("Error toggling follow:", err)
+    }
+  }
 
-//     return () => {
-//       channel.unsubscribe()
-//     }
-//   }, [currentUserId])
+  useEffect(() => {
+    if (!currentUserId) return
 
-//   const isFollowingUser = (userId: string) =>
-//     following.some((user) => user.id === userId)
-//   const isFollowedByUser = (userId: string) =>
-//     followers.some((user) => user.id === userId)
+    const fetchInitialData = async () => {
+      // Fetch data for the current user
+      await fetchFollowers(currentUserId)
+      await fetchFollowCounts(currentUserId)
+    }
 
-//   return {
-//     toggleFollow,
-//     isFollowingUser,
-//     isFollowedByUser,
-//     fetchFollowers,
-//     fetchFollowing,
-//     fetchFollowCounts,
-//     followCounts,
-//     followers,
-//     following,
-//     error,
-//   }
-// }
+    fetchInitialData()
 
-// export default useFollow
+    const channel = supabase
+      .channel("follows")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "follows" },
+        () => fetchInitialData(),
+      )
+      .subscribe()
+
+    return () => {
+      channel.unsubscribe()
+    }
+  }, [currentUserId])
+
+  const isFollowingUser = (userId: string) =>
+    following.some((user) => user.id === userId)
+
+  return {
+    toggleFollow,
+    isFollowingUser,
+    fetchFollowers,
+    fetchFollowing,
+    followCounts,
+    error,
+    followers,
+    following,
+  }
+}
+
+export default useFollow

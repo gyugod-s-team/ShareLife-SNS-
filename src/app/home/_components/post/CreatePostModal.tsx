@@ -24,7 +24,6 @@ const CreatePostModal: React.FC = () => {
   } = usePosts()
 
   const { nickname } = useAuth()
-  console.log("nickname:", nickname)
 
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>

@@ -72,8 +72,6 @@ const LoginPage = () => {
       password,
     })
 
-    console.log("signIn response:", res)
-
     if (res?.error) {
       toast({
         title: "로그인 실패",

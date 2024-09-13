@@ -22,21 +22,27 @@ const usePosts = () => {
     data: Post[]
     nextPage: number | undefined
   }
-
   const fetchPosts = async (
     pageParam: number = 1,
+    userId?: string,
   ): Promise<FetchPostsResult> => {
-    const { data, error } = await supabase
+    let query = supabase
       .from("posts")
       .select(`*, users(user_id, nickname, profile_image)`, { count: "exact" })
       .order("created_at", { ascending: false })
       .range((pageParam - 1) * ROWS_PER_PAGE, pageParam * ROWS_PER_PAGE - 1)
-      .returns<Post[]>()
+
+    if (userId) {
+      query = query.eq("user_id", userId)
+    }
+
+    const { data, error } = await query.returns<Post[]>()
 
     if (error) {
+      console.error("Error fetching posts:", error.message)
       throw new Error(error.message)
     }
-    console.log(data, "data!!!!!!!!!!!!!!!!!!!")
+
     return {
       data: data || [],
       nextPage: data?.length === ROWS_PER_PAGE ? pageParam + 1 : undefined,
@@ -239,6 +245,7 @@ const usePosts = () => {
     handleFileChange,
     deletePost,
     posts,
+    fetchPosts,
     editPostId,
     currentUserId,
     nickname,
