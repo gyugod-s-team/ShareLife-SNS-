@@ -1,5 +1,6 @@
 import useLike from "@/hooks/useLike"
-import React, { useEffect } from "react"
+import { throttle } from "lodash"
+import React, { useCallback } from "react"
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai"
 
 const LikeButton: React.FC<{ postId: number }> = ({ postId }) => {
@@ -7,9 +8,18 @@ const LikeButton: React.FC<{ postId: number }> = ({ postId }) => {
   const isLiked = isPostLikedByUser(postId)
   const likeCount = getLikeCountForPost(postId)
 
+  // throttle된 toggleLike 함수 생성
+  const throttledToggleLike = useCallback(
+    throttle((id: number) => toggleLike(id), 300), // 300ms 간격으로 요청
+    [toggleLike],
+  )
+
   return (
     <div className="flex items-center mt-2">
-      <button onClick={() => toggleLike(postId)} className="mr-2 text-xl">
+      <button
+        onClick={() => throttledToggleLike(postId)}
+        className="mr-2 text-xl"
+      >
         {isLiked ? (
           <AiFillHeart className="text-red-500" />
         ) : (

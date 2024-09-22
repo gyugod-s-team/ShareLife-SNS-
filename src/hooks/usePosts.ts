@@ -4,10 +4,11 @@ import { supabase } from "@/lib/supabase"
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import useAuth from "./useAuth"
 import { NewPost, Post } from "@/app/home/type"
+import _, { throttle } from "lodash"
 
 const ROWS_PER_PAGE = 10
 
-const usePosts = () => {
+const usePosts = (userId?: string) => {
   const { currentUserId, nickname } = useAuth()
   const [editPostId, setEditPostId] = useState<number | null>(null)
   const [title, setTitle] = useState<string>("")
@@ -22,6 +23,7 @@ const usePosts = () => {
     data: Post[]
     nextPage: number | undefined
   }
+
   const fetchPosts = async (
     pageParam: number = 1,
     userId?: string,
@@ -55,8 +57,8 @@ const usePosts = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["posts"],
-    queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam),
+    queryKey: ["posts", userId],
+    queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, userId),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 1,
   })
@@ -66,11 +68,11 @@ const usePosts = () => {
     [postsData],
   )
 
-  const loadMorePosts = () => {
+  const loadMorePosts = throttle(() => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage()
     }
-  }
+  }, 300)
 
   const uploadImage = async (file: File) => {
     const fileName = `image-${Date.now()}.png`
@@ -98,6 +100,7 @@ const usePosts = () => {
     }
 
     const { title, content, image_url, user_id } = newPost
+
     const { error } = await supabase
       .from("posts")
       .insert([{ title, content, user_id, image_url }])
@@ -108,20 +111,6 @@ const usePosts = () => {
         description: error.message,
       })
     } else {
-      // // 게시글 작성 후 사용자 정보 가져오기
-      // const { data: userData, error: userError } = await supabase
-      //   .from("users")
-      //   .select("nickname, profile_image")
-      //   .eq("user_id", currentUserId)
-      //   .single()
-
-      // if (userError) {
-      //   console.error("Error fetching user data:", userError.message)
-      // } else {
-      // 게시글 상단에 nickname과 profile_image 추가
-      // console.log("Nickname:", userData.nickname)
-      // console.log("Profile Image:", userData.profile_image)
-      // }
       toast({ title: "게시글이 작성되었습니다." })
       // 새로 작성된 게시글을 포함하여 데이터를 다시 불러옵니다.
       queryClient.invalidateQueries({ queryKey: ["posts"] })

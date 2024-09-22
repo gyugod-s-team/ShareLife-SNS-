@@ -5,7 +5,7 @@ const isProduction = process.env.NODE_ENV === "production"
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["mfovgoluhkgrvrsobpru.supabase.co"], // 이미지 도메인 설정
+    domains: ["jouopgwghtzpozglsrxw.supabase.co"], // 이미지 도메인 설정
   },
   webpack(config) {
     if (isProduction) {

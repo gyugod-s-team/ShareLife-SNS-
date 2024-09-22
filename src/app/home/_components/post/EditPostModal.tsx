@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import usePosts from "@/hooks/usePosts"
 import { Post } from "../../type"
+import Image from "next/image"
 
 type EditPostModalProps = {
   post: Post
@@ -23,10 +24,9 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
     setShowModal,
   } = usePosts()
 
-  // 수정 버튼을 클릭하면 모달을 열기 위한 함수
   const handleOpenModal = () => {
-    handleEditPost(post) // 선택한 게시글의 데이터를 설정
-    setShowModal(true) // 모달을 열기
+    handleEditPost(post)
+    setShowModal(true)
   }
 
   return (
@@ -36,24 +36,36 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent>
+        <DialogContent className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
           <DialogHeader>
             <Input
               placeholder="제목을 수정해주세요"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="w-full" // 너비를 100%로 설정
             />
             <Input
               placeholder="내용을 수정해주세요"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="mt-2"
+              className="mt-2 w-full" // 너비를 100%로 설정
             />
-            <Input type="file" accept="image/*" onChange={handleFileChange} />
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="mt-2 w-full" // 너비를 100%로 설정
+            />
             {imagePreview && (
-              <img src={imagePreview} alt="Preview" className="mt-2" />
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                className="mt-2 rounded-md object-cover h-48 w-full" // 고정된 높이 및 너비
+                width={400} // 실제 너비는 사용할 필요 없음
+                height={300} // 실제 높이도 사용할 필요 없음
+              />
             )}
-            <Button onClick={handleUpdatePost} className="mt-4">
+            <Button onClick={handleUpdatePost} className="mt-4 w-full">
               수정
             </Button>
           </DialogHeader>

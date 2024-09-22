@@ -2,7 +2,7 @@
 
 import useAuth from "@/hooks/useAuth"
 import usePosts from "@/hooks/usePosts"
-import React, { useCallback, useEffect, useRef } from "react"
+import React, { useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Logout from "./_components/logout/Logout"
 import CreatePostModal from "./_components/post/CreatePostModal"
@@ -11,9 +11,10 @@ import EditPostModal from "./_components/post/EditPostModal"
 import DeletePostButton from "./_components/post/DeletePostButton"
 import CommentSection from "./_components/comment/CommentSection"
 import Image from "next/image"
+import Header from "@/app/home/_components/Header"
 
 const HomePage = () => {
-  const { currentUserId, nickname, profileImage } = useAuth()
+  const { currentUserId } = useAuth()
   const { posts, loadMorePosts, hasNextPage, isFetchingNextPage } = usePosts()
   const router = useRouter()
 
@@ -37,64 +38,76 @@ const HomePage = () => {
   }
 
   return (
-    <div>
-      <Logout />
-      <CreatePostModal />
-      <div className="mt-8">
-        {posts.map((post, index) => {
-          return (
-            <div
-              key={post.id}
-              className="border p-4 mb-4"
-              ref={index === posts.length - 1 ? lastPostElementRef : null}
-            >
+    <div className="bg-neutral-800 min-h-screen">
+      <Header />
+      <main className="my-5 max-w-[600px] mx-auto pt-16 pb-8 px-2">
+        {posts.map((post, index) => (
+          <article
+            key={post.id}
+            className="bg-neutral-900 text-white border-2 border-neutral-900 rounded-lg mb-6 shadow-sm"
+            ref={index === posts.length - 1 ? lastPostElementRef : null}
+          >
+            <div className="flex items-center p-3 ">
+              <Image
+                src={post.users.profile_image}
+                alt={`${post.users.nickname}'s profile`}
+                className="w-8 h-8 rounded-full mr-3"
+                width={32}
+                height={32}
+              />
               <span
                 onClick={() => handleProfileClick(post.user_id)}
-                className="cursor-pointer"
+                className="font-semibold text-sm cursor-pointer hover:underline"
               >
-                <div className="flex items-center mb-2">
-                  {/* <Image
-                    src={post.users.profile_image} // 프로필 이미지
-                    alt={`${post.users.nickname}'s profile`}
-                    className="w-10 h-10 rounded-full mr-2"
-                    width={100}
-                    height={100}
-                  /> */}
-                  <img
-                    src={post.users.profile_image} // 프로필 이미지
-                    alt={`${post.users.nickname}'s profile`}
-                    className="w-10 h-10 rounded-full mr-2"
-                    width="100"
-                    height="100"
-                  />
-
-                  <span
-                    onClick={() => handleProfileClick(post.users.user_id)}
-                    className="cursor-pointer font-semibold"
-                  >
-                    {post.users.nickname} {/* 닉네임 */}
-                  </span>
-                </div>
+                {post.users.nickname}
               </span>
-              <h3 className="font-bold">{post.title}</h3>
-              <p>{post.content}</p>
-              {post.image_url && (
-                <img src={post.image_url} alt="Post Image" className="mt-2" />
-              )}
-              <LikeButton postId={post.id} />
+            </div>
+
+            {post.image_url && (
+              <div
+                className="relative w-full bg-neutral-800"
+                style={{ paddingTop: "100%" }}
+              >
+                <Image
+                  src={post.image_url}
+                  alt="Post Image"
+                  layout="fill"
+                  objectFit="contain"
+                  className="absolute top-0 left-0 w-full h-full"
+                />
+              </div>
+            )}
+
+            <div className="p-3">
+              <div className="flex items-center space-x-4 mb-2">
+                <LikeButton postId={post.id} />
+                {/* Add comment icon and share icon here */}
+              </div>
+
+              <div className="mb-2">
+                <span className="font-semibold text-sm mr-2">
+                  {post.users.nickname}
+                </span>
+                <span className="text-sm">{post.content}</span>
+              </div>
+
+              <CommentSection postId={post.id} />
 
               {post.user_id === currentUserId && (
-                <>
+                <div className="flex justify-end space-x-2 mt-2">
                   <EditPostModal post={post} />
                   <DeletePostButton post={post} />
-                </>
+                </div>
               )}
-              <CommentSection postId={post.id} />
             </div>
-          )
-        })}
-        {isFetchingNextPage && <div>Loading more posts...</div>}
-      </div>
+          </article>
+        ))}
+        {isFetchingNextPage && (
+          <div className="text-center py-4 text-gray-600">
+            Loading more posts...
+          </div>
+        )}
+      </main>
     </div>
   )
 }

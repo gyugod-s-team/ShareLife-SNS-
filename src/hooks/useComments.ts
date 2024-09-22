@@ -14,6 +14,7 @@ const ROWS_PER_PAGE = 20
 const useComments = (postId: number) => {
   const { currentUserId } = useAuth()
   const [comment, setComment] = useState<string>("")
+  const [editComment, setEditComment] = useState<string>("") // 댓글 수정용 상태
   const [editCommentId, setEditCommentId] = useState<number | null>(null)
   const [showCommentModal, setShowCommentModal] = useState<boolean>(false)
   const { toast } = useToast()
@@ -145,7 +146,7 @@ const useComments = (postId: number) => {
   // 댓글 생성 또는 수정 핸들러
   const handleCreateOrUpdateComment = async () => {
     if (editCommentId) {
-      await updateComment(editCommentId, comment)
+      await updateComment(editCommentId, editComment)
     } else {
       await createComment(comment)
     }
@@ -157,13 +158,14 @@ const useComments = (postId: number) => {
   // 댓글 수정 핸들러
   const handleEditComment = (comment: Comment) => {
     setEditCommentId(comment.id)
-    setComment(comment.content)
+    setEditComment(comment.content)
     setShowCommentModal(true)
   }
 
   // 폼 초기화 함수
   const resetForm = () => {
     setComment("")
+    setEditComment("")
     setEditCommentId(null)
   }
 
@@ -175,11 +177,14 @@ const useComments = (postId: number) => {
     status,
     comment,
     setComment,
+    editComment, // 수정용 상태 반환
+    setEditComment, // 수정용 상태 변경 함수 반환
     showCommentModal,
     setShowCommentModal,
     handleCreateOrUpdateComment,
     handleEditComment,
     deleteComment,
+    editCommentId,
     resetForm,
   }
 }

@@ -49,7 +49,7 @@ const RegisterPage: React.FC = () => {
             name,
             nickname,
             profile_image:
-              "https://mfovgoluhkgrvrsobpru.supabase.co/storage/v1/object/public/default_profile_image/profileImage.png?t=2024-09-01T11%3A46%3A01.209Z",
+              "https://jouopgwghtzpozglsrxw.supabase.co/storage/v1/object/public/default_profile_image/1361876.png",
           },
         },
       },
@@ -75,7 +75,7 @@ const RegisterPage: React.FC = () => {
         name,
         nickname,
         profile_image:
-          "https://mfovgoluhkgrvrsobpru.supabase.co/storage/v1/object/public/default_profile_image/profileImage.png?t=2024-09-01T11%3A46%3A01.209Z",
+          "https://jouopgwghtzpozglsrxw.supabase.co/storage/v1/object/public/default_profile_image/1361876.png",
       },
     ])
 
@@ -92,7 +92,7 @@ const RegisterPage: React.FC = () => {
       title: "회원가입 성공",
       description: "회원가입이 성공적으로 완료되었습니다.",
     })
-    route.push("/home")
+    route.push("/login")
   }
 
   const goToLoginPage = () => {
@@ -113,17 +113,12 @@ const RegisterPage: React.FC = () => {
       <Card className="w-[480px]">
         <CardHeader>
           <div className="flex justify-center">
-            {/* <Image
+            <Image
               width={300}
               height={100}
               src="/share life.png"
               alt="Logo Image"
-            /> */}
-            <img
-              src="/share life.png"
-              alt="Logo Image"
-              width="300"
-              height="100"
+              layout="responsive"
             />
           </div>
         </CardHeader>
