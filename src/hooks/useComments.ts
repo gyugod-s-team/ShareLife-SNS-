@@ -3,11 +3,15 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query"
-import React, { useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import useAuth from "./useAuth"
 import { useToast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
 import { Comment } from "@/app/home/type"
+
+type FetchCommentsResult = {
+  data: Comment[]
+  nextPage: number | undefined
+}
 
 const ROWS_PER_PAGE = 20
 
@@ -17,34 +21,24 @@ const useComments = (postId: number) => {
   const [editComment, setEditComment] = useState<string>("") // 댓글 수정용 상태
   const [editCommentId, setEditCommentId] = useState<number | null>(null)
   const [showCommentModal, setShowCommentModal] = useState<boolean>(false)
+  // const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
   const queryClient = useQueryClient()
-
-  type FetchCommentsResult = {
-    data: Comment[]
-    nextPage: number | undefined
-  }
 
   // 댓글을 가져오는 비동기 함수
   const fetchComments = async (
     pageParam: number = 1,
   ): Promise<FetchCommentsResult> => {
-    const { data, error } = await supabase
-      .from("comments")
-      .select("*", { count: "exact" })
-      .eq("post_id", postId)
-      .order("created_at", { ascending: false })
-      .range((pageParam - 1) * ROWS_PER_PAGE, pageParam * ROWS_PER_PAGE - 1)
-      .returns<Comment[]>()
-
-    if (error) {
-      console.error("댓글 가져오기 오류:", error) // 에러 로깅
-      throw new Error(error.message)
+    const response = await fetch(
+      `/api/comments?postId=${postId}&page=${pageParam}`,
+    )
+    if (!response.ok) {
+      throw new Error("댓글 가져오기 오류")
     }
-
+    const result = await response.json()
     return {
-      data: data || [],
-      nextPage: data?.length === ROWS_PER_PAGE ? pageParam + 1 : undefined,
+      data: result.data,
+      nextPage: result.nextPage,
     }
   }
 
@@ -56,6 +50,7 @@ const useComments = (postId: number) => {
     hasNextPage,
     isFetchingNextPage,
     status,
+    isLoading,
   } = useInfiniteQuery({
     queryKey: ["comments", postId],
     queryFn: ({ pageParam = 1 }) => fetchComments(pageParam),
@@ -77,19 +72,36 @@ const useComments = (postId: number) => {
 
   // 댓글 생성 함수
   const createComment = async (commentText: string) => {
+    if (!postId || !currentUserId || !commentText) {
+      toast({
+        title: "댓글 작성 오류",
+        description: "필수 필드가 누락되었습니다.",
+      })
+      return
+    }
+
     const newCommentData = {
       post_id: postId,
       user_id: currentUserId,
       content: commentText,
     }
-    const { error } = await supabase.from("comments").insert([newCommentData])
 
-    if (error) {
+    console.log("Sending Data to API:", newCommentData)
+
+    const response = await fetch("/api/comments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newCommentData),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
       toast({
         title: "댓글 작성 중 오류가 발생하였습니다",
-        description: error.message,
+        description: errorData.error,
       })
-      console.error("댓글 생성 오류:", error) // 에러 로깅
     } else {
       toast({ title: "댓글이 작성되었습니다" })
       queryClient.invalidateQueries({ queryKey: ["comments", postId] })
@@ -100,18 +112,26 @@ const useComments = (postId: number) => {
   const updateComment = async (commentId: number, updatedContent: string) => {
     if (!currentUserId) return
 
-    const { error } = await supabase
-      .from("comments")
-      .update({ content: updatedContent })
-      .eq("id", commentId)
-      .eq("user_id", currentUserId)
+    const updatedCommentData = {
+      commentId,
+      userId: currentUserId,
+      content: updatedContent,
+    }
 
-    if (error) {
+    const response = await fetch("/api/comments", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedCommentData),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
       toast({
         title: "댓글 수정 중 오류가 발생하였습니다",
-        description: error.message,
+        description: errorData.error,
       })
-      console.error("댓글 수정 오류:", error) // 에러 로깅
     } else {
       toast({ title: "댓글이 수정되었습니다" })
       queryClient.invalidateQueries({ queryKey: ["comments", postId] })
@@ -125,18 +145,25 @@ const useComments = (postId: number) => {
     const confirmDelete = window.confirm("정말로 이 댓글을 삭제하시겠습니까?")
     if (!confirmDelete) return
 
-    const { error } = await supabase
-      .from("comments")
-      .delete()
-      .eq("id", commentId)
-      .eq("user_id", currentUserId)
+    const deleteCommentData = {
+      commentId,
+      userId: currentUserId,
+    }
 
-    if (error) {
+    const response = await fetch("/api/comments", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(deleteCommentData),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
       toast({
         title: "댓글 삭제 중 오류가 발생하였습니다",
-        description: error.message,
+        description: errorData.error,
       })
-      console.error("댓글 삭제 오류:", error) // 에러 로깅
     } else {
       toast({ title: "댓글이 삭제되었습니다" })
       queryClient.invalidateQueries({ queryKey: ["comments", postId] })
@@ -145,6 +172,14 @@ const useComments = (postId: number) => {
 
   // 댓글 생성 또는 수정 핸들러
   const handleCreateOrUpdateComment = async () => {
+    if (!comment.trim() && !editComment.trim()) {
+      toast({
+        title: "댓글을 입력해주세요",
+        description: "빈 댓글은 작성할 수 없습니다.",
+      })
+      return // 댓글이 비어있으면 함수 종료
+    }
+
     if (editCommentId) {
       await updateComment(editCommentId, editComment)
     } else {
@@ -174,6 +209,7 @@ const useComments = (postId: number) => {
     loadMoreComments,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
     status,
     comment,
     setComment,

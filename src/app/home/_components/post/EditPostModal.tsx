@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import usePosts from "@/hooks/usePosts"
 import { Post } from "../../type"
 import Image from "next/image"
+import { FaPencilAlt } from "react-icons/fa" // Font Awesome
 
 type EditPostModalProps = {
   post: Post
@@ -31,8 +32,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
 
   return (
     <>
-      <Button onClick={handleOpenModal} className="mt-2">
-        수정
+      <Button
+        onClick={handleOpenModal}
+        className="mt-2 p-0 bg-transparent border-none"
+      >
+        <FaPencilAlt
+          className="text-white cursor-pointer hover:text-blue-500"
+          size={15}
+        />
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>

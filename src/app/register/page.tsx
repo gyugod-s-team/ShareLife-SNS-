@@ -9,123 +9,53 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useToast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
 import { RegisterSchema, userType } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Head from "next/head"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import React from "react"
 import { useForm } from "react-hook-form"
+import useAuth from "@/hooks/useAuth"
+import RegisterSkeletonCard from "./_components/RegisterSkeletonCard"
 
 const RegisterPage: React.FC = () => {
-  const route = useRouter()
-
-  const { toast } = useToast()
+  const { loading, handleSignUp, goToLoginPage } = useAuth()
 
   const form = useForm<userType>({
     resolver: zodResolver(RegisterSchema),
   })
 
-  const handleSignUp = async (data: userType) => {
-    const { email, password, name, nickname } = data
-
-    // Zod 유효성 검사
-    const result = RegisterSchema.safeParse({ email, password, name, nickname })
-
-    if (!result.success) {
-      const errors = result.error.errors.map((err) => err.message)
-      toast({ title: "회원가입 실패", description: errors.join(", ") })
-      return
-    }
-
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp(
-      {
-        email,
-        password,
-        options: {
-          data: {
-            name,
-            nickname,
-            profile_image:
-              "https://jouopgwghtzpozglsrxw.supabase.co/storage/v1/object/public/default_profile_image/1361876.png",
-          },
-        },
-      },
-    )
-
-    // Supabase signUp 오류 처리 로직
-    if (signUpError) {
-      console.log("Supabase error:", signUpError)
-      toast({
-        title: signUpError.message,
-        description: "회원가입을 실패하였습니다.",
-      })
-      return
-    }
-
-    // 사용자 정보를 users 테이블에 추가
-    const userId = signUpData.user?.id // user ID 가져오기
-
-    const { error: insertError } = await supabase.from("users").insert([
-      {
-        user_id: userId,
-        email,
-        name,
-        nickname,
-        profile_image:
-          "https://jouopgwghtzpozglsrxw.supabase.co/storage/v1/object/public/default_profile_image/1361876.png",
-      },
-    ])
-
-    if (insertError) {
-      console.log("Insert error:", insertError)
-      toast({
-        title: "사용자 정보 추가 실패",
-        description: insertError.message,
-      })
-      return
-    }
-
-    toast({
-      title: "회원가입 성공",
-      description: "회원가입이 성공적으로 완료되었습니다.",
-    })
-    route.push("/login")
-  }
-
-  const goToLoginPage = () => {
-    route.push("/login")
+  if (loading) {
+    return <RegisterSkeletonCard />
   }
 
   return (
-    <div>
+    <div className="flex min-h-screen items-center justify-center bg-neutral-800">
       <Head>
         <title>Signup to Share Life - Make Your Account</title>
         <meta
           name="description"
-          content="Sing Up to Share Life to access your account and connect with others."
+          content="Sign Up to Share Life to access your account and connect with others."
         />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://www.sharelife.shop/"></link>
       </Head>
-      <Card className="w-[480px]">
-        <CardHeader>
-          <div className="flex justify-center">
-            <Image
-              width={300}
-              height={100}
-              src="/share life.png"
-              alt="Logo Image"
-              layout="responsive"
-            />
-          </div>
+      <Card className="w-full max-w-md p-8 shadow-xl rounded-xl bg-white">
+        <CardHeader className="text-center">
+          <Image
+            width={250}
+            height={100}
+            src="/share life.png"
+            alt="Logo Image"
+            className="mx-auto mb-4"
+            loading="lazy"
+          />
         </CardHeader>
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSignUp)}
-            className="space-y-8"
+            className="space-y-4"
           >
             <FormField
               control={form.control}
@@ -133,20 +63,28 @@ const RegisterPage: React.FC = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="이메일" {...field} />
+                    <Input
+                      placeholder="이메일"
+                      {...field}
+                      className="p-4 text-lg rounded-lg"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input type="password" placeholder="비밀번호" {...field} />
+                    <Input
+                      type="password"
+                      placeholder="비밀번호"
+                      {...field}
+                      className="p-4 text-lg rounded-lg"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -158,7 +96,11 @@ const RegisterPage: React.FC = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="이름" {...field} />
+                    <Input
+                      placeholder="이름"
+                      {...field}
+                      className="p-4 text-lg rounded-lg"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -170,16 +112,30 @@ const RegisterPage: React.FC = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="닉네임" {...field} />
+                    <Input
+                      placeholder="닉네임"
+                      {...field}
+                      className="p-4 text-lg rounded-lg"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <CardFooter className="flex justify-center">
-              <Button type="submit">가입</Button>
-              <Button onClick={goToLoginPage}>계정이 있으신가요? 로그인</Button>
+            <CardFooter className="flex justify-between space-x-2">
+              <Button
+                type="submit"
+                className="flex-1 py-3 text-lg font-semibold bg-blue-600 text-white rounded-lg transition-colors hover:bg-blue-700"
+              >
+                가입
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={goToLoginPage}
+                className="flex-1 py-3 text-lg font-semibold bg-gray-300 text-black rounded-lg transition-colors hover:bg-gray-400 hover:text-white"
+              >
+                계정이 있으신가요? 로그인
+              </Button>
             </CardFooter>
           </form>
         </Form>

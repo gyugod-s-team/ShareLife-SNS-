@@ -28,26 +28,22 @@ const usePosts = (userId?: string) => {
     pageParam: number = 1,
     userId?: string,
   ): Promise<FetchPostsResult> => {
-    let query = supabase
-      .from("posts")
-      .select(`*, users(user_id, nickname, profile_image)`, { count: "exact" })
-      .order("created_at", { ascending: false })
-      .range((pageParam - 1) * ROWS_PER_PAGE, pageParam * ROWS_PER_PAGE - 1)
+    const response = await fetch(
+      `/api/posts?page=${pageParam}&userId=${userId}`,
+      { method: "GET" },
+    )
 
-    if (userId) {
-      query = query.eq("user_id", userId)
+    if (!response.ok) {
+      const errorData = await response.json()
+      console.error("Error fetching posts:", errorData.error)
+      throw new Error(errorData.error)
     }
 
-    const { data, error } = await query.returns<Post[]>()
-
-    if (error) {
-      console.error("Error fetching posts:", error.message)
-      throw new Error(error.message)
-    }
+    const data = await response.json()
 
     return {
       data: data || [],
-      nextPage: data?.length === ROWS_PER_PAGE ? pageParam + 1 : undefined,
+      nextPage: data.length === ROWS_PER_PAGE ? pageParam + 1 : undefined,
     }
   }
 
@@ -56,6 +52,9 @@ const usePosts = (userId?: string) => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading, // 초기 로딩 상태 추가
+    isError, // 에러 상태 추가
+    error, // 에러 정보 추가
   } = useInfiniteQuery({
     queryKey: ["posts", userId],
     queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, userId),
@@ -72,46 +71,55 @@ const usePosts = (userId?: string) => {
     if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage()
     }
-  }, 300)
+  }, 300) // 300ms 동안 하나의 요청만
 
   const uploadImage = async (file: File) => {
     const fileName = `image-${Date.now()}.png`
-    const { error: uploadError } = await supabase.storage
-      .from("images")
-      .upload(fileName, file)
+    // const fileData = await file.arrayBuffer()
 
-    if (uploadError) {
+    const formData = new FormData()
+    formData.append("fileName", fileName)
+    formData.append("file", file)
+
+    const response = await fetch("/api/posts/image", {
+      method: "POST",
+      body: formData,
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
       toast({
         title: "이미지 업로드 중 오류가 발생하였습니다.",
-        description: uploadError.message,
+        description: error.message,
       })
       return null
     }
-    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${fileName}`
+
+    const { imageUrl } = await response.json()
+    return imageUrl
   }
 
   const createPost = async (newPost: NewPost) => {
-    if (!currentUserId) {
-      toast({
-        title: "사용자가 인증되지 않았습니다.",
-        description: "게시글을 작성하기 전에 로그인하세요.",
-      })
-      return
-    }
+    const response = await fetch("/api/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPost),
+    })
 
-    const { title, content, image_url, user_id } = newPost
+    console.log("createpostsrespon", response)
 
-    const { error } = await supabase
-      .from("posts")
-      .insert([{ title, content, user_id, image_url }])
-    if (error) {
+    if (!response.ok) {
+      const error = await response.json()
       console.log("게시글 작성 중 오류:", error.message)
       toast({
         title: "게시글 작성 중 오류가 발생하였습니다.",
         description: error.message,
       })
     } else {
-      toast({ title: "게시글이 작성되었습니다." })
+      const data = await response.json()
+      toast({ title: data.message })
       // 새로 작성된 게시글을 포함하여 데이터를 다시 불러옵니다.
       queryClient.invalidateQueries({ queryKey: ["posts"] })
     }
@@ -142,27 +150,39 @@ const usePosts = (userId?: string) => {
     const confirmDelete = window.confirm("정말로 이 게시글을 삭제하시겠습니까?")
     if (!confirmDelete) return
 
-    const { error } = await supabase.from("posts").delete().eq("id", postId)
+    const response = await fetch("/api/posts", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: postId }),
+    })
 
-    if (error) {
+    if (!response.ok) {
+      const errorData = await response.json()
       toast({
         title: "게시글 삭제 중 오류가 발생하였습니다.",
-        description: error.message,
+        description: errorData.error,
       })
-    } else {
-      toast({ title: "게시글이 삭제되었습니다." })
-      queryClient.invalidateQueries({ queryKey: ["posts"] })
+      return
     }
+
+    toast({ title: "게시글이 삭제되었습니다." })
+    queryClient.invalidateQueries({ queryKey: ["posts"] })
   }
 
   const handleCreatePost = async () => {
-    const uploadedImageUrl = imageFile ? await uploadImage(imageFile) : null
-
-    if (!uploadedImageUrl) {
+    if (!imageFile) {
       toast({
         title: "이미지를 포함하지 않았습니다",
         description: "이미지를 추가해주세요.",
       })
+      return
+    }
+
+    const uploadedImageUrl = await uploadImage(imageFile)
+
+    if (!uploadedImageUrl) {
       return
     }
 
@@ -242,6 +262,9 @@ const usePosts = (userId?: string) => {
     loadMorePosts,
     hasNextPage,
     isFetchingNextPage,
+    isLoading, // 초기 로딩 상태 추가
+    isError, // 에러 상태 추가
+    error, // 에러 정보 추가
   }
 }
 

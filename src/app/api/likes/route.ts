@@ -1,40 +1,73 @@
 // src/app/api/likes/route.ts
-import { NextRequest, NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest) {
-  const { data, error } = await supabase.from("likes").select("*")
+// GET: 사용자가 좋아요한 게시물 가져오기
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url)
+  const userId = searchParams.get("userId")
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!userId) {
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 })
   }
 
-  return NextResponse.json(data)
-}
-
-export async function POST(req: NextRequest) {
-  const { post_id, user_id } = await req.json()
-  const { data, error } = await supabase
+  const { data: likes, error } = await supabase
     .from("likes")
-    .insert([{ post_id, user_id }])
+    .select("post_id")
+    .eq("user_id", userId)
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    const errorMessage: string = error.message || "Failed to fetch likes"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 
-  return NextResponse.json(data)
+  return NextResponse.json(likes || [])
 }
 
-export async function DELETE(req: NextRequest) {
-  const { post_id, user_id } = await req.json()
-  const { data, error } = await supabase
+// POST: 좋아요 추가
+export async function POST(request: NextRequest) {
+  const { postId, userId } = await request.json()
+
+  if (!postId || !userId) {
+    return NextResponse.json(
+      { error: "Post ID and User ID are required" },
+      { status: 400 },
+    )
+  }
+
+  const { error } = await supabase
+    .from("likes")
+    .insert([{ post_id: postId, user_id: userId }])
+
+  if (error) {
+    const errorMessage: string = error.message || "Failed to add like"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
+  }
+
+  return NextResponse.json({ message: "Like added" }, { status: 201 })
+}
+
+// DELETE: 좋아요 삭제
+export async function DELETE(request: NextRequest) {
+  const { postId, userId } = await request.json()
+
+  if (!postId || !userId) {
+    return NextResponse.json(
+      { error: "Post ID and User ID are required" },
+      { status: 400 },
+    )
+  }
+
+  const { error } = await supabase
     .from("likes")
     .delete()
-    .match({ post_id, user_id })
+    .eq("post_id", postId)
+    .eq("user_id", userId)
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    const errorMessage: string = error.message || "Failed to delete like"
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 
-  return NextResponse.json(data)
+  return NextResponse.json({ message: "Like removed" }, { status: 200 })
 }

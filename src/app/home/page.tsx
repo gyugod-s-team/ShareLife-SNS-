@@ -4,18 +4,26 @@ import useAuth from "@/hooks/useAuth"
 import usePosts from "@/hooks/usePosts"
 import React, { useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
-import Logout from "./_components/logout/Logout"
-import CreatePostModal from "./_components/post/CreatePostModal"
 import LikeButton from "./_components/like/LikeButton"
 import EditPostModal from "./_components/post/EditPostModal"
 import DeletePostButton from "./_components/post/DeletePostButton"
 import CommentSection from "./_components/comment/CommentSection"
 import Image from "next/image"
 import Header from "@/app/home/_components/Header"
+import PostSkeleton from "./_components/PostSkeleton"
+import TruncatedText from "./_components/TruncatedText"
 
 const HomePage = () => {
   const { currentUserId } = useAuth()
-  const { posts, loadMorePosts, hasNextPage, isFetchingNextPage } = usePosts()
+  const {
+    posts,
+    loadMorePosts,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+  } = usePosts()
   const router = useRouter()
 
   const observer = useRef<IntersectionObserver | null>(null)
@@ -23,15 +31,35 @@ const HomePage = () => {
     (node: HTMLDivElement | null) => {
       if (isFetchingNextPage) return
       if (observer.current) observer.current.disconnect()
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage) {
-          loadMorePosts()
-        }
-      })
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasNextPage) {
+            loadMorePosts()
+          }
+        },
+        { rootMargin: "100px" },
+      ) // 스크롤 끝에서 100px 전에 로드
       if (node) observer.current.observe(node)
     },
     [isFetchingNextPage, hasNextPage, loadMorePosts],
   )
+
+  if (isLoading) {
+    return (
+      <div className="bg-neutral-800 min-h-screen">
+        <Header />
+        <main className="my-5 max-w-[600px] mx-auto pt-16 pb-8 px-2">
+          <PostSkeleton />
+          <PostSkeleton />
+          <PostSkeleton />
+        </main>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return <div>Error: {(error as Error).message}</div>
+  }
 
   const handleProfileClick = (userId: string) => {
     router.push(`/profile/${userId}`)
@@ -54,6 +82,7 @@ const HomePage = () => {
                 className="w-8 h-8 rounded-full mr-3"
                 width={32}
                 height={32}
+                loading="lazy"
               />
               <span
                 onClick={() => handleProfileClick(post.user_id)}
@@ -61,6 +90,12 @@ const HomePage = () => {
               >
                 {post.users.nickname}
               </span>
+              {post.user_id === currentUserId && (
+                <div className="ml-auto flex space-x-2 ">
+                  <EditPostModal post={post} />
+                  <DeletePostButton post={post} />
+                </div>
+              )}
             </div>
 
             {post.image_url && (
@@ -74,38 +109,48 @@ const HomePage = () => {
                   layout="fill"
                   objectFit="contain"
                   className="absolute top-0 left-0 w-full h-full"
+                  loading="lazy"
                 />
               </div>
             )}
 
             <div className="p-3">
+              <div className="mb-2">
+                <div className="font-bold">
+                  {" "}
+                  {/* 제목을 더 두드러지게 */}
+                  <TruncatedText
+                    text={post.title}
+                    maxLength={20}
+                    maxLines={1}
+                  />
+                </div>
+                <div className="text-sm">
+                  {" "}
+                  {/* 타이틀을 덜 강조 */}
+                  <TruncatedText
+                    text={post.content}
+                    maxLength={30}
+                    maxLines={1}
+                  />
+                </div>
+              </div>
+
               <div className="flex items-center space-x-4 mb-2">
                 <LikeButton postId={post.id} />
                 {/* Add comment icon and share icon here */}
               </div>
 
-              <div className="mb-2">
-                <span className="font-semibold text-sm mr-2">
-                  {post.users.nickname}
-                </span>
-                <span className="text-sm">{post.content}</span>
-              </div>
-
               <CommentSection postId={post.id} />
-
-              {post.user_id === currentUserId && (
-                <div className="flex justify-end space-x-2 mt-2">
-                  <EditPostModal post={post} />
-                  <DeletePostButton post={post} />
-                </div>
-              )}
             </div>
           </article>
         ))}
         {isFetchingNextPage && (
-          <div className="text-center py-4 text-gray-600">
-            Loading more posts...
-          </div>
+          <>
+            <PostSkeleton />
+            <PostSkeleton />
+            <PostSkeleton />
+          </>
         )}
       </main>
     </div>

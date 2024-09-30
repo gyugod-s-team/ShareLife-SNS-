@@ -1,40 +1,55 @@
-// src/app/api/follows/route.ts
-import { NextRequest, NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: NextRequest) {
-  const { data, error } = await supabase.from("follows").select("*")
+export async function POST(request: NextRequest) {
+  const { follower_id, following_id } = await request.json()
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!follower_id || !following_id) {
+    return NextResponse.json(
+      { error: "Both follower_id and following_id are required" },
+      { status: 400 },
+    )
   }
 
-  return NextResponse.json(data)
+  try {
+    const { error } = await supabase
+      .from("follows")
+      .insert({ follower_id, following_id })
+
+    if (error) throw error
+
+    return NextResponse.json({ message: "Follow successful" })
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    )
+  }
 }
 
-export async function POST(req: NextRequest) {
-  const { follower_id, following_id } = await req.json()
-  const { data, error } = await supabase
-    .from("follows")
-    .insert([{ follower_id, following_id }])
+export async function DELETE(request: NextRequest) {
+  const { follower_id, following_id } = await request.json()
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!follower_id || !following_id) {
+    return NextResponse.json(
+      { error: "Both follower_id and following_id are required" },
+      { status: 400 },
+    )
   }
 
-  return NextResponse.json(data)
-}
+  try {
+    const { error } = await supabase
+      .from("follows")
+      .delete()
+      .match({ follower_id, following_id })
 
-export async function DELETE(req: NextRequest) {
-  const { follower_id, following_id } = await req.json()
-  const { data, error } = await supabase
-    .from("follows")
-    .delete()
-    .match({ follower_id, following_id })
+    if (error) throw error
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ message: "Unfollow successful" })
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    )
   }
-
-  return NextResponse.json(data)
 }

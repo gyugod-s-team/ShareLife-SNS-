@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import usePosts from "@/hooks/usePosts"
 import useAuth from "@/hooks/useAuth"
 import Image from "next/image"
+import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
 
 const CreatePostModal: React.FC = () => {
   const {
@@ -24,12 +26,16 @@ const CreatePostModal: React.FC = () => {
     handleCreatePost,
   } = usePosts()
 
-  const { nickname } = useAuth()
+  const { nickname, loading } = useAuth()
 
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogTrigger className="text-lg font-semibold hover:underline">
-        {nickname}님의 일상을 남겨보세요!
+        {loading ? (
+          <Skeleton width={200} height={20} />
+        ) : (
+          `${nickname}님의 일상을 남겨보세요!`
+        )}
       </DialogTrigger>
       <DialogContent className="p-6 bg-white rounded-lg shadow-lg">
         <DialogHeader>

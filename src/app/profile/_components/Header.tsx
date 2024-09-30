@@ -16,7 +16,7 @@ const Header = () => {
       <div className="flex-grow text-center"></div>
       <div className="flex items-center space-x-4">
         <Button onClick={handleBackToHome}>뒤로가기</Button>
-        {/* <Logout /> */}
+        <Logout />
       </div>
     </header>
   )

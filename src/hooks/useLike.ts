@@ -3,9 +3,15 @@ import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { toast } from "@/components/ui/use-toast"
 import useAuth from "./useAuth"
+import { method } from "lodash"
 
 type LikeCounts = {
   [postId: number]: number
+}
+
+type LikeCountData = {
+  postId: number // 또는 string, 데이터 타입에 맞게 조정
+  count: number
 }
 
 const useLike = () => {
@@ -17,67 +23,40 @@ const useLike = () => {
   const fetchUserLikes = async () => {
     if (!currentUserId) return
 
-    const { data: likes, error } = await supabase
-      .from("likes")
-      .select("post_id")
-      .eq("user_id", currentUserId)
-      .returns<{ post_id: number }[]>()
+    const response = await fetch(`/api/likes?userId=${currentUserId}`, {
+      method: "GET",
+    })
+    const data = await response.json()
 
-    if (error) {
-      setError("Error fetching likes")
-      console.error("Error fetching likes:", error)
+    if (response.ok) {
+      setLikedPosts(data.map((like: { post_id: number }) => like.post_id))
     } else {
-      setLikedPosts(likes ? likes.map((like) => like.post_id) : [])
+      setError(data.error)
+      console.error("Error fetching likes:", data.error)
     }
   }
 
   const fetchAllLikeCounts = async () => {
-    try {
-      const { data: posts, error: postError } = await supabase
-        .from("posts")
-        .select("id")
+    const response = await fetch(`/api/likes/count`, { method: "GET" })
 
-      if (postError) {
-        setError("Error fetching posts")
-        console.error("Error fetching posts:", postError)
-        return
-      }
-
-      const postIds = posts.map((post) => post.id)
-      const updatedLikeCounts: LikeCounts = {}
-
-      // Fetch like counts for each post
-      const likeCountsPromises = postIds.map(async (postId) => {
-        const { count, error: countError } = await supabase
-          .from("likes")
-          .select("*", { count: "exact" })
-          .eq("post_id", postId)
-
-        if (countError) {
-          console.error("Error fetching like count for post:", countError)
-          toast({
-            title: "좋아요 불러오는데 에러가 발생하였습니다",
-            description: countError.message,
-          })
-          return { postId, count: 0 } // Default to 0 on error
-        }
-        return { postId, count: count || 0 }
-      })
-
-      const likeCountsResults = await Promise.all(likeCountsPromises)
-      likeCountsResults.forEach(({ postId, count }) => {
-        updatedLikeCounts[postId] = count
-      })
-
-      setLikeCounts(updatedLikeCounts)
-    } catch (error) {
-      setError("Error fetching like counts")
-      console.error("Error fetching like counts:", error)
+    if (!response.ok) {
+      const data = await response.json()
       toast({
-        title: "좋아요 갯수 불러오기 실패",
-        description: (error as Error).message,
+        title: "좋아요 수 불러오기 실패",
+        description: data.error,
       })
+      console.error("Error fetching like counts:", data.error)
+      return
     }
+
+    const likeCountsData: LikeCountData[] = await response.json()
+    const updatedLikeCounts: LikeCounts = {}
+
+    likeCountsData.forEach(({ postId, count }) => {
+      updatedLikeCounts[postId] = count
+    })
+
+    setLikeCounts(updatedLikeCounts)
   }
 
   const toggleLike = async (postId: number) => {
@@ -92,32 +71,31 @@ const useLike = () => {
         : [...prevLikedPosts, postId],
     )
 
-    if (existingLike) {
-      const { error: deleteError } = await supabase
-        .from("likes")
-        .delete()
-        .eq("post_id", postId)
-        .eq("user_id", currentUserId)
-      if (deleteError) {
-        toast({
-          title: "좋아요 삭제 중 오류가 발생했습니다.",
-          description: deleteError.message,
-        })
-      } else {
-        fetchAllLikeCounts() // Update like count
-      }
+    const method = existingLike ? "DELETE" : "POST"
+    const response = await fetch(`/api/likes`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postId, userId: currentUserId }),
+    })
+
+    if (!response.ok) {
+      const data = await response.json()
+      toast({
+        title: existingLike
+          ? "좋아요 삭제 중 오류가 발생했습니다."
+          : "좋아요 추가 중 오류가 발생했습니다.",
+        description: data.error,
+      })
+      // Rollback optimistic update on error
+      setLikedPosts((prevLikedPosts) =>
+        existingLike
+          ? [...prevLikedPosts, postId]
+          : prevLikedPosts.filter((id) => id !== postId),
+      )
     } else {
-      const { error: insertError } = await supabase
-        .from("likes")
-        .insert([{ post_id: postId, user_id: currentUserId }])
-      if (insertError) {
-        toast({
-          title: "좋아요 추가 중 오류가 발생했습니다.",
-          description: insertError.message,
-        })
-      } else {
-        fetchAllLikeCounts() // Update like count
-      }
+      fetchAllLikeCounts() // Update like count
     }
   }
 
