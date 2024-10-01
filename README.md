@@ -12,7 +12,7 @@
 
 > 개발 기간 : 2024.08 ~ 2024.09
 
-> 배포 주소 : ~~~
+> 배포 주소 : [Share Life](https://www.sharelife.shop/)
 
 > 'Share Life' 계정 정보
 
@@ -44,7 +44,7 @@
 <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white">
 <img src="https://img.shields.io/badge/nextauth.js-000000?style=for-the-badge&logo=nextauth.js&logoColor=white">
 <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white">
-<img src="https://img.shields.io/badge/zustand-000000?style=for-the-badge&logo=zustand&logoColor=white">
+<!-- <img src="https://img.shields.io/badge/zustand-000000?style=for-the-badge&logo=zustand&logoColor=white"> -->
 <img src="https://img.shields.io/badge/zod-3178C6?style=for-the-badge&logo=custom">
 <img src="https://img.shields.io/badge/react%20hook%20form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
 <br>
@@ -60,13 +60,13 @@
 <table>
   <thead>
     <tr>
-      <th align="center">아키텍처(Architecture)(만들어야함) - 어느 사이트가 좋음?(Architecture)</th>
+      <th align="center">아키텍처(Architecture)</th>
     </tr>
   </thead>
 <tbody>
   <tr>
      <td align="center">
-          <a target="_blank" rel="noopener noreferrer" href=""><img src="" alt="아키텍처" width="1000px" style="max-width: 100%;"></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/3dB4nSF"><img src="https://ibb.co/3dB4nSF" alt="아키텍처" width="1000px" style="max-width: 100%;"></a>
         </td>
     </tr>
   </tbody>
