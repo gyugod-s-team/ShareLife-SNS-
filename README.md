@@ -57,7 +57,7 @@
 
 ## 프로젝트 구성도
 
-<table>
+<table align="center">
   <thead>
     <tr>
       <th align="center">아키텍처(Architecture)</th>
@@ -66,13 +66,13 @@
 <tbody>
   <tr>
      <td align="center">
-          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/3dB4nSF"><img src="https://ibb.co/3dB4nSF" alt="아키텍처" width="1000px" style="max-width: 100%;"></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/3dB4nSF"><img src="https://i.ibb.co/02hmxY9/share-life-drawio.png"  alt="share-life-drawio" width="1000px" style="max-width: 100%;"></a>
         </td>
     </tr>
   </tbody>
 </table>
 
-<table>
+<table align="center">
   <thead>
     <tr>
       <th align="center">개체-관계 모델(ERD)(수파베이스꺼 안이쁨 다시 만들지 고민)(Architecture)</th>
@@ -115,17 +115,15 @@
 📁 components                           # ShadCN/UI
 ├──📁 ui
 │
-📁 hooks
+📁 hooks                                # Auth, Comment, Follow, Like, Post
 │
-📁 lib
+📁 lib                                  # NextAuth, Supabase, Tailwind CSS, Zod
 │
-📁 providers
-│
-📁 stores                               # Zustand
+📁 providers                            # ReactQuery, NextAuth
 │
 📁 styles
 │
-📁 types
+📁 types                                # NextAuth, ShadCN/UI, Supabase
 ```
 
 <markdown-accessiblity-table data-catalyst=""><table>
@@ -139,7 +137,7 @@
 <tbody>
 <tr>
 <td><code>api</code></td>
-<td>api 관련 파일 넣어놓은 폴더</td>
+<td>API 관련 폴더</td>
 </tr>
 <tr>
 <td><code>home</code></td>
@@ -159,20 +157,20 @@
 </tr>
 <tr>
 <td><code>hooks</code></td>
-<td>훅 관련된 폴더</td>
+<td>훅 관련 폴더</td>
 </tr>
 <tr>
 <td><code>lib</code></td>
-<td>폴더</td>
+<td>라이브러리 및 유틸리티 관련 폴더</td>
 </tr>
 <tr>
 <td><code>providers</code></td>
-<td> 폴더</td>
+<td>공급자 관련 폴더</td>
 </tr>
-<tr>
+<!-- <tr>
 <td><code>stores</code></td>
 <td>Zustand 상태관리 관련된 폴더</td>
-</tr>
+</tr> -->
 <tr>
 <td><code>styles</code></td>
 <td>스타일 관련된 폴더</td>
@@ -186,13 +184,29 @@
 
 ## 기능 소개
 
-**(시연 영상??)**
-
 - **로그인 / 회원가입**
   - Zod를 이용한 **폼 유효성 검증**(이메일 형식, 대소문자+특수문자+8자 이상 비밀번호, 2자 이상 이름 및 닉네임)
   - React-Hook-Form를 이용한 **폼 상태 관리 및 성능 최적화**
   - NextAuth.js와 Supabase Auth를 이용한 **인증 상태 유지 및 유저 정보 관리**
   - `middelware.ts`를 통해 Token이 없을 시, **서비스 접근 제한 및 보호**
+<details>
+  <summary>로그인 / 회원가입 시연 영상</summary>
+   <table>
+    <thead>
+      <tr>
+        <th>로그인</th>
+        <th>회원가입</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="https://i.imgur.com/qYY6AfL.gif" alt="로그인" width="500px" style="max-width: 100%;"></td>
+        <td><img src="https://i.imgur.com/GDNn22i.gif" alt="회원가입" width="500px" style="max-width: 100%;"></td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+
 - **게시글 및 댓글 CRUD**
 
   - TanStack Query useInfiniteQuery를 이용한 **페이지네이션(무한스크롤)**
@@ -200,15 +214,61 @@
   - `useMemo`와 `useCallback`을 이용한 **게시글 데이터 메모이제이션(성능 개선)**
   - ShadCN/UI 모달창을 이용한 **게시글 생성 및 수정(Title/Content/Image)**
   - Next.js Image 컴포넌트 이용하여 **자동 이미지 최적화**
+<details>
+  <summary>게시글 및 댓글 CRUD 시연 영상</summary>
+   <table>
+    <thead>
+      <tr>
+        <th>게시글 및 댓글 CRUD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="https://i.imgur.com/30wdJs3.gif" alt="로그인" width="500px" style="max-width: 100%;"></td>
+      </tr>
+    </tbody>
+  </table>
+</details>
 
 - **게시글 좋아요 & 유저 팔로우**
   - **낙관적 UI 업데이트**를 활용한 좋아요 및 팔로우
   - Supabase Realtime를 이용한 **실시간 업데이트**
+<details>
+  <summary>게시글 좋아요 & 유저 팔로우 시연 영상</summary>
+   <table>
+    <thead>
+      <tr>
+        <th>게시글 좋아요 및 유저 팔로우</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="https://i.imgur.com/x1NaXtL.gif" alt="로그인" width="500px" style="max-width: 100%;"></td>
+      </tr>
+    </tbody>
+  </table>
+</details>
 
 ## 성능 최적화
-
-아직 최적화 중
-
+  <table>
+    <thead>
+      <tr>
+        <th>성능 최적화 전</th>
+        <th>성능 최적화 후</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+<td style="width: 300px; height: 300px; overflow: hidden;">
+    <img src="https://velog.velcdn.com/images/gyu4016/post/e446ae9f-3844-4378-9829-46710e7e4363/image.png" alt="성능 최적화 전" style="width: 100%; height: 100%; object-fit: cover;">
+</td>
+<td style="width: 300px; height: 300px; overflow: hidden;">
+    <img src="https://velog.velcdn.com/images/gyu4016/post/1a5dbcab-fe2a-4b56-bb88-7b34fb1e7e55/image.png" alt="성능 최적화 후" style="width: 100%; height: 100%; object-fit: cover;">
+</td>
+      </tr>
+    </tbody>
+  </table>
+ 
 ## 트러블 슈팅
 
 너무 많고 짜잘해서 다 넣을지 뺄지 고민중(최적화 아직 안끝남)
