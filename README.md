@@ -119,7 +119,7 @@
 │
 📁 lib                                  # NextAuth, Supabase, Tailwind CSS, Zod
 │
-📁 providers                            # ReactQuery, NextAuth
+📁 providers                            # TanstackQuery, NextAuth
 │
 📁 styles
 │
@@ -209,8 +209,8 @@
 
 - **게시글 및 댓글 CRUD**
 
-  - TanStack Query useInfiniteQuery를 이용한 **페이지네이션(무한스크롤)**
-  - IntersectionObserver를 사용하여 **스크롤 끝에 도달하면 다음 게시글 로드**
+  - `TanStack Query useInfiniteQuery`를 이용한 **페이지네이션(무한스크롤)**
+  - `IntersectionObserver`를 사용하여 **스크롤 끝에 도달하면 다음 게시글 로드**
   - `useMemo`와 `useCallback`을 이용한 **게시글 데이터 메모이제이션(성능 개선)**
   - ShadCN/UI 모달창을 이용한 **게시글 생성 및 수정(Title/Content/Image)**
   - Next.js Image 컴포넌트 이용하여 **자동 이미지 최적화**
@@ -268,24 +268,31 @@
       </tr>
     </tbody>
   </table>
+
+- 웹 성능 최적화 점수 약 40점 증가
+  - img태그 next Image 컴포넌트로 변경 및 lazy loading 적용하여 이미지 최적화
+  - Terser-Webpack-Plugin 도입으로 JS코드 축소 및 불필요한 코드 제거
+  - Tanstack Query useInfiniteQuery와 throttle 적용하여 초기 렌더링 속도 향상
+  - userMemo와 useCallback을 이용한 데이터 메모이제이션
+  - React-Hook-Form 라이브러리로 폼 리렌더링 방지
  
 ## 트러블 슈팅
 
-너무 많고 짜잘해서 다 넣을지 뺄지 고민중(최적화 아직 안끝남)
-
-=================================================================================
-
-4. 주요 기능
-5. 데모 영상
-6. 특이사항
-7. 구글 애널리틱스 통계
-8. 개발 기간
-9. 프로젝트의 주요 기능과 목적
-10. 설치 실행 방법
-11. 변경 로그의 링크
-12. 사전 요구사항
-13. 소개
-14. 사용법
-15. 기여 방법
-16. 라이센스
-17. 연락처
+- **Next 14 버전에서 React-query 사용 시 RSC와의 충돌**
+  - 원인
+    - 루트 layout에서 클라이언트 전용 QueryClientProvider 사용하면 데이터 불일치
+  - 해결 방법
+    - Client Stream Hydration 방식을 사용해 데이터 동기화 문제 해결
+      - 클라이언트 컴포넌트에 Provider넣어준 후 layout에 import
+    - ReactQueryStreamedHydration 추가하여 서버에서 클라이언트 측으로 데이터 효율적으로 전달
+- **NextAuth Session** 타입 에러
+  - 원인
+    - NextAuth.js의 기본 세션 타입에 사용자 정의 타입이 없음
+  - 해결 방법
+    - types/next-auth.d.ts에서 Session과 JWT 타입 확장하여 id와 email 타입을 명시적으로 선언
+    - tsconfig.json의 include 배열에 types 폴더 추가하여 타입 인식하도록 설정
+- **팔로우 팔로잉 타입 에러**
+  - 원인
+    - Supabase의 follows 테이블의 column 타입을 똑같이 선언해서 데이터 호출해도 에러 발생
+  - 해결 방법
+    - Supabase에서 직접 Database 타입을 불러와 createClient에 추가하여 해결
