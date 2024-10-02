@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { signIn, useSession } from "next-auth/react"
 import { LoginSchema, RegisterSchema, userType } from "@/lib/zod"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 const useAuth = () => {
   const { data: session, status } = useSession()
@@ -14,6 +14,7 @@ const useAuth = () => {
   const [postProfileImage, setPostProfileImage] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const route = useRouter()
+  const pathname = usePathname()
   const { toast } = useToast()
 
   // 에러 처리를 위한 헬퍼 함수
@@ -51,17 +52,21 @@ const useAuth = () => {
   useEffect(() => {
     if (status === "loading") {
       setLoading(true)
-      return
-    } // 세션 로딩 중에는 아무 작업도 하지 않음
+      return // 세션 로딩 중에는 아무 작업도 하지 않음
+    } else {
+      setLoading(false) // 로딩이 끝나면 false로 설정
+    }
 
-    if (status === "unauthenticated") {
-      setLoading(false)
-      // 인증되지 않은 사용자는 로그인 페이지로 리다이렉트
+    // 로그인 또는 회원가입 페이지에서는 토스트 메시지를 표시하지 않음
+    if (
+      status === "unauthenticated" &&
+      pathname !== "/login" &&
+      pathname !== "/register"
+    ) {
       toast({
         title: "로그인 상태가 아닙니다.",
         description: "로그인을 먼저 진행해주세요.",
       })
-      route.push("/login")
     } else if (status === "authenticated" && session?.user) {
       setCurrentUserId(session.user.id)
 
@@ -92,7 +97,7 @@ const useAuth = () => {
 
       fetchUserData()
     }
-  }, [status, session, route, toast])
+  }, [status, session, route, pathname, toast])
 
   const handleSignUp = async (data: userType) => {
     const { email, password, name, nickname } = data
@@ -182,6 +187,7 @@ const useAuth = () => {
   }
 
   const goToRegisterPage = () => {
+    console.log("test")
     route.push("/register")
   }
 

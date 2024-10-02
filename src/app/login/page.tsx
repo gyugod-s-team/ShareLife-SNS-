@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import Head from "next/head"
-import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardFooter, CardHeader } from "@/components/ui/card"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import useAuth from "@/hooks/useAuth"

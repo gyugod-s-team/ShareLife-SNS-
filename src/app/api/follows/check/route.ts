@@ -23,9 +23,6 @@ export async function POST(request: NextRequest) {
       throw error // 에러를 던져서 catch 블록으로 이동
     }
 
-    console.log("Request data:", { follower_id, following_id })
-    console.log("Database response:", { data, error })
-
     return NextResponse.json({ isFollowing: !!data })
   } catch (error) {
     console.error("Error occurred:", error)
