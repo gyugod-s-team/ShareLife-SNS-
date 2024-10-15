@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { signIn, useSession } from "next-auth/react"
-import { LoginSchema, RegisterSchema, userType } from "@/lib/zod"
+import { userType } from "@/lib/zod"
 import { usePathname, useRouter } from "next/navigation"
 
 const useAuth = () => {
@@ -68,36 +68,17 @@ const useAuth = () => {
         description: "로그인을 먼저 진행해주세요.",
       })
     } else if (status === "authenticated" && session?.user) {
-      setCurrentUserId(session.user.id)
-
-      // API로 현재 사용자 데이터 가져오기
-      const fetchUserData = async () => {
-        try {
-          const response = await fetch(
-            `/api/auth/user-data?userId=${session.user.id}`,
-            {
-              method: "GET",
-            },
-          )
-
-          const data = await response.json()
-
-          if (response.ok && data) {
-            setNickname(data.nickname)
-            setProfileImage(data.profile_image || session.user.image || "")
-          } else {
-            throw new Error(data.error || "Failed to fetch user data")
-          }
-        } catch (error: unknown) {
-          handleError(error) // 헬퍼 함수 호출
-        } finally {
-          setLoading(false) // 데이터 로딩 완료 후 loading 상태를 false로 설정
-        }
+      if (currentUserId !== session.user.id) {
+        setCurrentUserId(session.user.id)
       }
-
-      fetchUserData()
+      if (nickname !== session.user.nickname) {
+        setNickname(session.user.nickname)
+      }
+      if (profileImage !== session.user.profile_image) {
+        setProfileImage(session.user.profile_image || session.user.image || "")
+      }
     }
-  }, [status, session, route, pathname, toast])
+  }, [status, session])
 
   const handleSignUp = async (data: userType) => {
     const { email, password, name, nickname } = data

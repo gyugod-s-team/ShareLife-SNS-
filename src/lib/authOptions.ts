@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase"
 import { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import EmailProvider from "next-auth/providers/email"
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -34,32 +33,32 @@ export const authOptions: AuthOptions = {
           return null
         }
 
-        return { id: data.user.id, email: data.user.email }
+        const { user_metadata } = data.user
+
+        return {
+          id: data.user.id,
+          email: data.user.email || null,
+          nickname: user_metadata.nickname,
+          profile_image: user_metadata.profile_image,
+        }
       },
     }),
-    // EmailProvider({
-    //   server: {
-    //     host: "smtp.gmail.com", // Gmail SMTP 서버
-    //     port: process.env.EMAIL_SERVER_PORT,
-    //     auth: {
-    //       user: process.env.EMAIL_SERVER_USER, // Gmail 계정 이메일
-    //       pass: process.env.EMAIL_SERVER_PASSWORD, // Gmail 계정 비밀번호
-    //     },
-    //   },
-    //   from: process.env.EMAIL_FROM, // 발신 이메일
-    // }),
   ],
   pages: {
     signIn: "/login",
   },
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60, // 1시간 (60분 * 60초)
+    updateAge: 30 * 60, // 30분 (30분 * 60초)
   },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
         token.email = user.email
+        token.nickname = user.nickname
+        token.profile_image = user.profile_image
       }
       return token
     },
@@ -68,6 +67,8 @@ export const authOptions: AuthOptions = {
         session.user = {
           id: token.id as string,
           email: token.email as string,
+          nickname: token.nickname as string,
+          profile_image: token.profile_image as string,
         }
       }
       return session
