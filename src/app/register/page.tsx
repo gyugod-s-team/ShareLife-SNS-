@@ -23,6 +23,7 @@ const RegisterPage: React.FC = () => {
 
   const form = useForm<userType>({
     resolver: zodResolver(RegisterSchema),
+    mode: "onChange",
   })
 
   if (loading) {

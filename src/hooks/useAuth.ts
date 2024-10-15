@@ -103,16 +103,6 @@ const useAuth = () => {
     const { email, password, name, nickname } = data
     setLoading(true)
 
-    // Zod 유효성 검사
-    const result = RegisterSchema.safeParse({ email, password, name, nickname })
-
-    if (!result.success) {
-      const errors = result.error.errors.map((err) => err.message)
-      toast({ title: "회원가입 실패", description: errors.join(", ") })
-      setLoading(false)
-      return
-    }
-
     try {
       const response = await fetch("/api/auth/sign-up", {
         method: "POST",
@@ -123,7 +113,7 @@ const useAuth = () => {
       })
 
       const responseData = await response.json()
-
+      console.log("회원가입 API 응답:", responseData)
       if (!response.ok) {
         throw new Error(responseData.error || "회원가입에 실패하였습니다.")
       }
@@ -152,16 +142,6 @@ const useAuth = () => {
   const handleLogin = async (data: userType) => {
     const { email, password } = data
     setLoading(true)
-
-    //Zod 유효성 검사
-    const result = LoginSchema.safeParse({ email, password })
-
-    if (!result.success) {
-      const errors = result.error.errors.map((err) => err.message)
-      toast({ title: "로그인 실패", description: errors.join(", ") })
-      setLoading(false)
-      return
-    }
 
     try {
       // NextAuth의 signIn을 사용하여 로그인 시도

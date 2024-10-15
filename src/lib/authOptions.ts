@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase"
 import { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import EmailProvider from "next-auth/providers/email"
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -25,7 +26,7 @@ export const authOptions: AuthOptions = {
 
         if (error) {
           console.error("Supabase sign-in error:", error)
-          return null
+          throw new Error(error.message) // 사용자에게 에러 메시지 전달
         }
 
         if (!data.user) {
@@ -36,6 +37,17 @@ export const authOptions: AuthOptions = {
         return { id: data.user.id, email: data.user.email }
       },
     }),
+    // EmailProvider({
+    //   server: {
+    //     host: "smtp.gmail.com", // Gmail SMTP 서버
+    //     port: process.env.EMAIL_SERVER_PORT,
+    //     auth: {
+    //       user: process.env.EMAIL_SERVER_USER, // Gmail 계정 이메일
+    //       pass: process.env.EMAIL_SERVER_PASSWORD, // Gmail 계정 비밀번호
+    //     },
+    //   },
+    //   from: process.env.EMAIL_FROM, // 발신 이메일
+    // }),
   ],
   pages: {
     signIn: "/login",

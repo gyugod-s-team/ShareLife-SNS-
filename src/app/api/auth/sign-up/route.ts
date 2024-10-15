@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest) {
   const { email, password, name, nickname } = await request.json()
 
+  console.log("Attempting to sign up with email:", email) // 추가된 로깅
+
   // 회원가입 처리
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email,
@@ -20,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   // Supabase signUp 오류 처리
   if (signUpError) {
-    console.log("Supabase error:", signUpError)
+    console.log("Supabase error:", signUpError.message)
     return NextResponse.json({ error: signUpError.message }, { status: 400 })
   }
 
