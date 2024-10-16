@@ -108,8 +108,6 @@ const usePosts = (userId?: string) => {
       body: JSON.stringify(newPost),
     })
 
-    console.log("createpostsrespon", response)
-
     if (!response.ok) {
       const error = await response.json()
       console.log("게시글 작성 중 오류:", error.message)
@@ -128,18 +126,28 @@ const usePosts = (userId?: string) => {
   const updatePost = async (uploadedImageUrl: string) => {
     if (!editPostId) return
 
-    const { error } = await supabase
-      .from("posts")
-      .update({ title, content, image_url: uploadedImageUrl })
-      .eq("id", editPostId)
+    const response = await fetch("api/posts", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: editPostId,
+        title,
+        content,
+        image_url: uploadedImageUrl,
+      }),
+    })
 
-    if (error) {
+    if (!response.ok) {
+      const error = await response.json()
       toast({
         title: "게시글 수정 중 오류가 발생하였습니다.",
         description: error.message,
       })
     } else {
-      toast({ title: "게시글이 수정되었습니다." })
+      const data = await response.json()
+      toast({ title: data.message })
       resetForm()
       setShowModal(false)
       queryClient.invalidateQueries({ queryKey: ["posts"] }) // 게시글 리스트를 새로 고침

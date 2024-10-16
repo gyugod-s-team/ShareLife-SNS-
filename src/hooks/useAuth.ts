@@ -1,9 +1,10 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { signIn, useSession } from "next-auth/react"
-import { userType } from "@/lib/zod"
+import { LoginSchema, RegisterSchema, userType } from "@/lib/zod"
 import { usePathname, useRouter } from "next/navigation"
+import { profile } from "console"
 
 const useAuth = () => {
   const { data: session, status } = useSession()
@@ -75,10 +76,35 @@ const useAuth = () => {
         setNickname(session.user.nickname)
       }
       if (profileImage !== session.user.profile_image) {
-        setProfileImage(session.user.profile_image || session.user.image || "")
+        setProfileImage(session.user.profile_image)
       }
     }
+    console.log("session:", session)
   }, [status, session])
+
+  // // 메모이제이션된 값
+  // const currentUserId = useMemo(() => {
+  //   return status === "authenticated" && session?.user ? session.user.id : ""
+  // }, [status, session])
+
+  // const nickname = useMemo(() => {
+  //   return status === "authenticated" && session?.user
+  //     ? session.user.nickname
+  //     : null
+  // }, [status, session])
+
+  // const profileImage = useMemo(() => {
+  //   return status === "authenticated" && session?.user
+  //     ? session.user.profile_image
+  //     : null
+  // }, [status, session])
+
+  // // 상태 변화 감지용 useEffect
+  // useEffect(() => {
+  //   console.log("currentUserId:", currentUserId)
+  //   console.log("nickname:", nickname)
+  //   console.log("profileImage:", profileImage)
+  // }, [currentUserId, nickname, profileImage])
 
   const handleSignUp = async (data: userType) => {
     const { email, password, name, nickname } = data
