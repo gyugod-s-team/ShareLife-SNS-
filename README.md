@@ -66,7 +66,7 @@
 <tbody>
   <tr>
      <td align="center">
-          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/3dB4nSF"><img src="https://i.ibb.co/02hmxY9/share-life-drawio.png"  alt="share-life-drawio" width="1000px" style="max-width: 100%;"></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/sb3c72Z"><img src="https://i.ibb.co/172BcLk/share-life-drawio-1.png"  alt="share-life-drawio" width="1000px" style="max-width: 100%;"></a>
         </td>
     </tr>
   </tbody>
