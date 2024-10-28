@@ -3,13 +3,7 @@ import { LoginSchema, userType } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import React from "react"
 import { useForm } from "react-hook-form"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import Head from "next/head"
 import { Card, CardFooter, CardHeader } from "@/components/ui/card"
@@ -17,12 +11,18 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import useAuth from "@/hooks/useAuth"
 import LoginSkeletonCard from "./_components/LoginSkeletonCard"
+import useUserStore from "@/store/useUserStore"
+import CommonInputField from "@/components/common/CommonInputField"
 
 const LoginPage = () => {
   const { handleLogin, goToRegisterPage, loading } = useAuth()
+  const { email } = useUserStore()
 
   const form = useForm<userType>({
     resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: email,
+    },
   })
 
   if (loading) {
@@ -55,40 +55,26 @@ const LoginPage = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="이메일"
-                      {...field}
-                      className="p-4 text-lg rounded-lg"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <CommonInputField form={form} name="email">
+              {({ ...field }) => (
+                <Input
+                  {...field} // field 객체의 속성을 Input에 전달해야 react-hook-form에서 제어가 가능
+                  type="email"
+                  placeholder="이메일"
+                />
               )}
-            />
+            </CommonInputField>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="비밀번호"
-                      {...field}
-                      className="p-4 text-lg rounded-lg"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <CommonInputField form={form} name="password">
+              {({ ...field }) => (
+                <Input
+                  {...field} // field 객체의 속성을 Input에 전달해야 react-hook-form에서 제어가 가능
+                  type="password"
+                  placeholder="비밀번호"
+                  autoComplete="new-password"
+                />
               )}
-            />
+            </CommonInputField>
 
             <CardFooter className="flex justify-between space-x-2">
               <Button

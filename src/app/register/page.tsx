@@ -17,9 +17,12 @@ import React from "react"
 import { useForm } from "react-hook-form"
 import useAuth from "@/hooks/useAuth"
 import RegisterSkeletonCard from "./_components/RegisterSkeletonCard"
+import useUserStore from "@/store/useUserStore"
+import CommonInputField from "@/components/common/CommonInputField"
 
 const RegisterPage: React.FC = () => {
   const { loading, handleSignUp, goToLoginPage } = useAuth()
+  const { email } = useUserStore()
 
   const form = useForm<userType>({
     resolver: zodResolver(RegisterSchema),
@@ -58,71 +61,40 @@ const RegisterPage: React.FC = () => {
             onSubmit={form.handleSubmit(handleSignUp)}
             className="space-y-4"
           >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="이메일"
-                      {...field}
-                      className="p-4 text-lg rounded-lg"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <CommonInputField form={form} name="email">
+              {({ ...field }) => (
+                <Input
+                  {...field} // field 객체의 속성을 Input에 전달해야 react-hook-form에서 제어가 가능
+                  type="email"
+                  placeholder="이메일"
+                  defaultValue={email}
+                />
               )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="비밀번호"
-                      {...field}
-                      className="p-4 text-lg rounded-lg"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            </CommonInputField>
+
+            <CommonInputField form={form} name="password">
+              {({ ...field }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="비밀번호"
+                  autoComplete="new-password"
+                />
               )}
-            />
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="이름"
-                      {...field}
-                      className="p-4 text-lg rounded-lg"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            </CommonInputField>
+
+            <CommonInputField form={form} name="name">
+              {({ ...field }) => (
+                <Input {...field} type="text" placeholder="이름" />
               )}
-            />
-            <FormField
-              control={form.control}
-              name="nickname"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="닉네임"
-                      {...field}
-                      className="p-4 text-lg rounded-lg"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            </CommonInputField>
+
+            <CommonInputField form={form} name="nickname">
+              {({ ...field }) => (
+                <Input {...field} type="text" placeholder="닉네임" />
               )}
-            />
+            </CommonInputField>
+
             <CardFooter className="flex justify-between space-x-2">
               <Button
                 type="submit"

@@ -2,12 +2,13 @@
 import { useState, useEffect, useMemo } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { signIn, useSession } from "next-auth/react"
-import { LoginSchema, RegisterSchema, userType } from "@/lib/zod"
+import { userType } from "@/lib/zod"
 import { usePathname, useRouter } from "next/navigation"
-import { profile } from "console"
+import useUserStore from "@/store/useUserStore"
 
 const useAuth = () => {
   const { data: session, status } = useSession()
+  const { setEmail } = useUserStore()
   const [currentUserId, setCurrentUserId] = useState<string>("")
   const [nickname, setNickname] = useState<string | null>(null)
   const [profileImage, setProfileImage] = useState<string | null>(null)
@@ -120,10 +121,11 @@ const useAuth = () => {
       })
 
       const responseData = await response.json()
-      console.log("회원가입 API 응답:", responseData)
       if (!response.ok) {
         throw new Error(responseData.error || "회원가입에 실패하였습니다.")
       }
+      // 이메일 Zustand에 저장
+      setEmail(email)
 
       toast({
         title: "회원가입 성공",
