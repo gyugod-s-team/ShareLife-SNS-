@@ -44,6 +44,7 @@
 <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=next.js&logoColor=white">
 <img src="https://img.shields.io/badge/nextauth.js-000000?style=for-the-badge&logo=nextauth.js&logoColor=white">
 <img src="https://img.shields.io/badge/TanStack%20Query-FF4154?style=for-the-badge&logo=react-query&logoColor=white">
+<img src="https://img.shields.io/badge/zustand-000000?style=for-the-badge&logo=zustand&logoColor=white">
 <!-- <img src="https://img.shields.io/badge/zustand-000000?style=for-the-badge&logo=zustand&logoColor=white"> -->
 <img src="https://img.shields.io/badge/zod-3178C6?style=for-the-badge&logo=custom">
 <img src="https://img.shields.io/badge/react%20hook%20form-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white">
@@ -66,7 +67,7 @@
 <tbody>
   <tr>
      <td align="center">
-          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/3dB4nSF"><img src="https://i.ibb.co/02hmxY9/share-life-drawio.png"  alt="share-life-drawio" width="1000px" style="max-width: 100%;"></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://ibb.co/sb3c72Z"><img src="https://i.ibb.co/172BcLk/share-life-drawio-1.png"  alt="share-life-drawio" width="1000px" style="max-width: 100%;"></a>
         </td>
     </tr>
   </tbody>
