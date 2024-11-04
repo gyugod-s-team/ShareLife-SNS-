@@ -1,10 +1,10 @@
 "use client"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { signIn, useSession } from "next-auth/react"
-import { userType } from "@/lib/zod"
 import { usePathname, useRouter } from "next/navigation"
 import useUserStore from "@/store/useUserStore"
+import { LoginType, RegisterType } from "@/lib/zod"
 
 const useAuth = () => {
   const { data: session, status } = useSession()
@@ -12,8 +12,6 @@ const useAuth = () => {
   const [currentUserId, setCurrentUserId] = useState<string>("")
   const [nickname, setNickname] = useState<string | null>(null)
   const [profileImage, setProfileImage] = useState<string | null>(null)
-  const [postNickname, setPostNickname] = useState<string | null>(null)
-  const [postProfileImage, setPostProfileImage] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const route = useRouter()
   const pathname = usePathname()
@@ -31,24 +29,17 @@ const useAuth = () => {
     setLoading(false) // 에러 발생 시 loading 상태를 false로 설정
   }
 
-  // 사용자 프로필 정보를 가져오는 함수 예시
   const fetchPostUserData = async (userId: string) => {
-    try {
-      const response = await fetch(`/api/auth/user-data?userId=${userId}`, {
-        method: "GET",
-      })
+    const response = await fetch(`/api/auth/user-data?userId=${userId}`, {
+      method: "GET",
+    })
 
-      const data = await response.json()
+    const data = await response.json()
 
-      if (response.ok && data) {
-        setPostNickname(data.nickname)
-        setPostProfileImage(data.profile_image)
-      } else {
-        throw new Error(data.error?.message || "Failed to fetch user data")
-      }
-    } catch (error: unknown) {
-      handleError(error) // 헬퍼 함수 호출
+    if (!response.ok) {
+      throw new Error(data.error?.message || "Failed to fetch user data")
     }
+    return data
   }
 
   useEffect(() => {
@@ -80,34 +71,9 @@ const useAuth = () => {
         setProfileImage(session.user.profile_image)
       }
     }
-    console.log("session:", session)
   }, [status, session])
 
-  // // 메모이제이션된 값
-  // const currentUserId = useMemo(() => {
-  //   return status === "authenticated" && session?.user ? session.user.id : ""
-  // }, [status, session])
-
-  // const nickname = useMemo(() => {
-  //   return status === "authenticated" && session?.user
-  //     ? session.user.nickname
-  //     : null
-  // }, [status, session])
-
-  // const profileImage = useMemo(() => {
-  //   return status === "authenticated" && session?.user
-  //     ? session.user.profile_image
-  //     : null
-  // }, [status, session])
-
-  // // 상태 변화 감지용 useEffect
-  // useEffect(() => {
-  //   console.log("currentUserId:", currentUserId)
-  //   console.log("nickname:", nickname)
-  //   console.log("profileImage:", profileImage)
-  // }, [currentUserId, nickname, profileImage])
-
-  const handleSignUp = async (data: userType) => {
+  const handleSignUp = async (data: RegisterType) => {
     const { email, password, name, nickname } = data
     setLoading(true)
 
@@ -144,11 +110,10 @@ const useAuth = () => {
   }
 
   const goToLoginPage = () => {
-    console.log("goToLoginPage 호출됨")
     route.push("/login")
   }
 
-  const handleLogin = async (data: userType) => {
+  const handleLogin = async (data: LoginType) => {
     const { email, password } = data
     setLoading(true)
 
@@ -176,7 +141,6 @@ const useAuth = () => {
   }
 
   const goToRegisterPage = () => {
-    console.log("test")
     route.push("/register")
   }
 
@@ -203,8 +167,6 @@ const useAuth = () => {
     nickname,
     profileImage,
     handleLogout,
-    postNickname,
-    postProfileImage,
     fetchPostUserData,
     loading,
     handleSignUp,

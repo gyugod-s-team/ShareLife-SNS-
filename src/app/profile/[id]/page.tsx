@@ -21,11 +21,11 @@ import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import ProfileSkeleton from "../_components/skeleton/ProfileSkeleton"
 import PostsSkeleton from "../_components/skeleton/PostsSkeleton"
+import { useQuery } from "@tanstack/react-query"
 
 const UserProfile = ({ params }: { params: { id: string } }) => {
   const { id } = params
-  const { currentUserId, postNickname, postProfileImage, fetchPostUserData } =
-    useAuth()
+  const { currentUserId, fetchPostUserData } = useAuth()
   const { posts, isFetchingNextPage, isError, error, isLoading, fetchPosts } =
     usePosts(id)
   const { followers, following, followCounts, toggleFollow, isFollowing } =
@@ -39,10 +39,32 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     if (id) {
-      fetchPostUserData(id)
       fetchPosts(1, id)
     }
-  }, [id, fetchPostUserData, fetchPosts])
+  }, [id, fetchPosts])
+
+  // useQuery를 사용하여 사용자 데이터를 가져옵니다.
+  const {
+    data: userData,
+    isSuccess: isUserDataSuccess,
+    isError: isUserDataError,
+    isLoading: isUserDataLoading,
+  } = useQuery({
+    queryKey: ["postUserData", id],
+    queryFn: () => fetchPostUserData(id), // fetchPostUserData를 호출할 때 id를 전달합니다.
+    enabled: !!id, // id가 있을 때만 쿼리를 활성화합니다.
+    staleTime: 10 * 60 * 1000, // 5분 동안 신선한 데이터로 유지
+    refetchInterval: false, // 자동 갱신 비활성화
+    gcTime: 10 * 60 * 1000, // cacheTime임 10분동엔 메모리 유지
+  })
+
+  if (isUserDataLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isUserDataError) {
+    return <div>Error loading user data.</div>
+  }
 
   const handleToggleFollow = async () => {
     if (isFollowing) {
@@ -52,7 +74,7 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
         await toggleFollow(id)
         toast({
           title: "팔로우 성공",
-          description: `${postNickname}님을 팔로우하였습니다.`,
+          description: `${userData.nickname}님을 팔로우하였습니다.`,
         })
       } catch (error) {
         console.error("Follow Error:", error)
@@ -70,7 +92,7 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
       await toggleFollow(id)
       toast({
         title: "언팔로우 성공",
-        description: `${postNickname}님을 언팔로우하였습니다.`,
+        description: `${userData.nickname}님을 언팔로우하였습니다.`,
       })
     } catch (error) {
       console.error("Unfollow Error:", error)
@@ -100,7 +122,7 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
     )
   }
 
-  if (isLoading) {
+  if (isLoading || !isUserDataSuccess) {
     return (
       <div className="bg-neutral-800 min-h-screen text-white">
         <Header />
@@ -112,7 +134,7 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
     )
   }
 
-  if (isError) {
+  if (isUserDataError || isError) {
     return <div className="text-white">Error: {(error as Error).message}</div>
   }
 
@@ -121,10 +143,11 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
       <Header />
       <main className="max-w-[935px] my-5 mx-auto pt-16 pb-8 px-4">
         <div className="flex items-center mb-10">
-          {postProfileImage ? (
+          {userData.profile_image ? (
             <Image
-              src={postProfileImage}
-              alt={`${postNickname || "User"}'s profile`}
+              // src={postProfileImage}
+              src={userData.profile_image}
+              alt={`${userData.nickname || "User"}'s profile`}
               className="w-36 h-36 rounded-full mr-10"
               width={144}
               height={144}
@@ -135,8 +158,8 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
           )}
           <div>
             <div className="flex items-center mb-4">
-              {postNickname ? (
-                <h1 className="text-2xl mr-4">{postNickname}</h1>
+              {userData.nickname ? (
+                <h1 className="text-2xl mr-4">{userData.nickname}</h1>
               ) : (
                 <Skeleton width={150} height={30} />
               )}
@@ -210,14 +233,14 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
               <div className="w-2/5 flex flex-col h-full">
                 <div className="p-4 border-b border-neutral-700 flex items-center">
                   <Image
-                    src={postProfileImage || "/default-avatar.png"}
-                    alt={postNickname || "User"}
+                    src={userData.profile_image || "/default-avatar.png"}
+                    alt={userData.nickname || "User"}
                     width={32}
                     height={32}
                     className="rounded-full mr-3"
                     loading="lazy"
                   />
-                  <span className="font-semibold">{postNickname}</span>
+                  <span className="font-semibold">{userData.nickname}</span>
                 </div>
 
                 {/* Scrollable Comment Section */}

@@ -1,5 +1,5 @@
 "use client"
-import { LoginSchema, userType } from "@/lib/zod"
+import { LoginSchema, LoginType } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import React from "react"
 import { useForm } from "react-hook-form"
@@ -18,7 +18,7 @@ const LoginPage = () => {
   const { handleLogin, goToRegisterPage, loading } = useAuth()
   const { email } = useUserStore()
 
-  const form = useForm<userType>({
+  const form = useForm<LoginType>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: email,
@@ -57,18 +57,14 @@ const LoginPage = () => {
           <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-8">
             <CommonInputField form={form} name="email">
               {({ ...field }) => (
-                <Input
-                  {...field} // field 객체의 속성을 Input에 전달해야 react-hook-form에서 제어가 가능
-                  type="email"
-                  placeholder="이메일"
-                />
+                <Input {...field} type="email" placeholder="이메일" />
               )}
             </CommonInputField>
 
             <CommonInputField form={form} name="password">
               {({ ...field }) => (
                 <Input
-                  {...field} // field 객체의 속성을 Input에 전달해야 react-hook-form에서 제어가 가능
+                  {...field}
                   type="password"
                   placeholder="비밀번호"
                   autoComplete="new-password"

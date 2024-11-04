@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const { title, content, image_url, user_id } = await request.json()
+  console.log("Received data:", { title, content, image_url, user_id })
 
   if (!title || !content || !user_id) {
     return NextResponse.json(
@@ -48,17 +49,12 @@ export async function POST(request: NextRequest) {
     .select()
 
   if (error) {
+    console.error("Supabase insert error:", error)
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
 
   return NextResponse.json({ message: "게시글이 작성되었습니다.", data })
 }
-
-// return NextResponse.json(
-//   { message: "게시글이 작성되었습니다." },
-//   { status: 201 },
-// )
-// }
 
 export async function PUT(request: NextRequest) {
   const { id, title, content, image_url } = await request.json()

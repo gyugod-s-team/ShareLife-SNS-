@@ -218,7 +218,6 @@ const useFollow = (userId: string) => {
           }),
         })
 
-        console.log("checkresponse", response)
         if (!response.ok) {
           const { error } = await response.json()
           throw new Error(error)

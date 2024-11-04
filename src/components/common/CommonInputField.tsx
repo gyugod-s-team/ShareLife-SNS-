@@ -5,7 +5,7 @@ import {
   UseFormReturn,
 } from "react-hook-form"
 import { FormControl, FormField, FormItem, FormMessage } from "../ui/form"
-import { ReactElement, ReactNode } from "react"
+import { ReactElement } from "react"
 
 type CommonInputFieldProps<TFormData extends FieldValues> = {
   form: UseFormReturn<TFormData>

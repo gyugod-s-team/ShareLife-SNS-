@@ -24,10 +24,13 @@ const usePosts = (userId?: string) => {
     nextPage: number | undefined
   }
 
+  let apiCallCount = 0
+
   const fetchPosts = async (
     pageParam: number = 1,
     userId?: string,
   ): Promise<FetchPostsResult> => {
+    apiCallCount++
     const response = await fetch(
       `/api/posts?page=${pageParam}&userId=${userId}`,
       { method: "GET" },
@@ -74,7 +77,7 @@ const usePosts = (userId?: string) => {
   }, 300) // 300ms 동안 하나의 요청만
 
   const uploadImage = async (file: File) => {
-    const fileName = `image-${Date.now()}.png`
+    const fileName = `image-${Date.now()}.webp`
     // const fileData = await file.arrayBuffer()
 
     const formData = new FormData()
@@ -95,8 +98,8 @@ const usePosts = (userId?: string) => {
       return null
     }
 
-    const { imageUrl } = await response.json()
-    return imageUrl
+    const { webpImageUrl } = await response.json()
+    return webpImageUrl
   }
 
   const createPost = async (newPost: NewPost) => {
@@ -110,7 +113,7 @@ const usePosts = (userId?: string) => {
 
     if (!response.ok) {
       const error = await response.json()
-      console.log("게시글 작성 중 오류:", error.message)
+      console.error("게시글 작성 중 오류:", error.message)
       toast({
         title: "게시글 작성 중 오류가 발생하였습니다.",
         description: error.message,

@@ -1,4 +1,5 @@
 import TerserPlugin from "terser-webpack-plugin"
+import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer"
 
 const isProduction = process.env.NODE_ENV === "production"
 
@@ -21,12 +22,27 @@ const nextConfig = {
               },
               compress: {
                 drop_console: true, // console.* 구문 제거
+                pure_funcs: ["console.log"], // 특정 함수 호출 제거
+                unused: true, // 사용하지 않는 코드 제거
+                dead_code: true, // 도달할 수 없는 코드 제거
+                reduce_vars: true, // 변수의 크기를 줄여서 최적화
               },
+              mangle: true,
             },
             extractComments: false, // 주석을 별도의 파일로 추출하지 않음
           }),
         ],
       }
+    }
+
+    // Bundle Analyzer 추가
+    if (process.env.ANALYZE) {
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: "server",
+          openAnalyzer: true,
+        }),
+      )
     }
     return config
   },

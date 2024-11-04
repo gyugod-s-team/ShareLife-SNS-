@@ -80,8 +80,6 @@ const useLike = () => {
       body: JSON.stringify({ postId, userId: currentUserId }),
     })
 
-    console.log("response:", response)
-
     if (!response.ok) {
       const data = await response.json()
       toast({

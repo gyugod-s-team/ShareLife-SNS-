@@ -86,8 +86,6 @@ const useComments = (postId: number) => {
       content: commentText,
     }
 
-    console.log("Sending Data to API:", newCommentData)
-
     const response = await fetch("/api/comments", {
       method: "POST",
       headers: {

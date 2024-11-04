@@ -35,10 +35,6 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const { post_id, user_id, content } = await request.json()
 
-  console.log("postId", post_id)
-  console.log("userId", user_id)
-  console.log("content", content)
-
   if (!post_id || !user_id || !content) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 })
   }

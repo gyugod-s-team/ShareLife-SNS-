@@ -1,15 +1,9 @@
 "use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader } from "@/components/ui/card"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RegisterSchema, userType } from "@/lib/zod"
+import { RegisterSchema, RegisterType } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Head from "next/head"
 import Image from "next/image"
@@ -24,7 +18,7 @@ const RegisterPage: React.FC = () => {
   const { loading, handleSignUp, goToLoginPage } = useAuth()
   const { email } = useUserStore()
 
-  const form = useForm<userType>({
+  const form = useForm<RegisterType>({
     resolver: zodResolver(RegisterSchema),
     mode: "onChange",
   })
