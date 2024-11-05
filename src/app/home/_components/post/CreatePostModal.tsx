@@ -23,7 +23,7 @@ const CreatePostModal: React.FC = () => {
     setTitle,
     setContent,
     handleFileChange,
-    handleCreatePost,
+    debouncedCreatePost,
   } = usePosts()
 
   const { nickname, loading } = useAuth()
@@ -68,7 +68,7 @@ const CreatePostModal: React.FC = () => {
             />
           )}
           <Button
-            onClick={handleCreatePost}
+            onClick={debouncedCreatePost}
             className="mt-4 w-full bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
             게시

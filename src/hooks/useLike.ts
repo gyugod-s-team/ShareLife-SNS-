@@ -4,110 +4,121 @@ import { supabase } from "@/lib/supabase"
 import { toast } from "@/components/ui/use-toast"
 import useAuth from "./useAuth"
 import { method } from "lodash"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 type LikeCounts = {
   [postId: number]: number
 }
 
+type LikeData = {
+  post_id: number
+}
+
 type LikeCountData = {
-  postId: number // 또는 string, 데이터 타입에 맞게 조정
+  postId: number
   count: number
 }
 
 const useLike = () => {
   const { currentUserId } = useAuth()
-  const [likedPosts, setLikedPosts] = useState<number[]>([])
-  const [likeCounts, setLikeCounts] = useState<LikeCounts>({})
-  const [error, setError] = useState<string | null>(null)
+  const queryClient = useQueryClient()
 
-  const fetchUserLikes = async () => {
-    if (!currentUserId) return
-
-    const response = await fetch(`/api/likes?userId=${currentUserId}`, {
-      method: "GET",
-    })
-    const data = await response.json()
-
-    if (response.ok) {
-      setLikedPosts(data.map((like: { post_id: number }) => like.post_id))
-    } else {
-      setError(data.error)
-      console.error("Error fetching likes:", data.error)
-    }
-  }
-
-  const fetchAllLikeCounts = async () => {
-    const response = await fetch(`/api/likes/count`, { method: "GET" })
-
-    if (!response.ok) {
+  // Fetch user likes
+  const { data: likedPosts = [], error: likedPostsError } = useQuery<number[]>({
+    queryKey: ["userLikes", currentUserId],
+    queryFn: async () => {
+      if (!currentUserId) return []
+      const response = await fetch(`/api/likes?userId=${currentUserId}`)
       const data = await response.json()
-      toast({
-        title: "좋아요 수 불러오기 실패",
-        description: data.error,
-      })
-      console.error("Error fetching like counts:", data.error)
-      return
-    }
+      if (!response.ok)
+        throw new Error(data.error || "좋아요를 불러오는 데 실패했습니다.")
+      return data.map((like: LikeData) => like.post_id)
+    },
+    staleTime: 30000,
+    enabled: !!currentUserId,
+  })
 
-    const likeCountsData: LikeCountData[] = await response.json()
-    const updatedLikeCounts: LikeCounts = {}
-
-    likeCountsData.forEach(({ postId, count }) => {
-      updatedLikeCounts[postId] = count
-    })
-
-    setLikeCounts(updatedLikeCounts)
-  }
-
-  const toggleLike = async (postId: number) => {
-    if (!currentUserId) return
-
-    const existingLike = likedPosts.includes(postId)
-
-    // Optimistic UI update
-    setLikedPosts((prevLikedPosts) =>
-      existingLike
-        ? prevLikedPosts.filter((id) => id !== postId)
-        : [...prevLikedPosts, postId],
-    )
-
-    const method = existingLike ? "DELETE" : "POST"
-    const response = await fetch(`/api/likes`, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
+  // Fetch all like counts
+  const { data: likeCounts = {}, error: likeCountsError } =
+    useQuery<LikeCounts>({
+      queryKey: ["likeCounts"],
+      queryFn: async () => {
+        const response = await fetch(`/api/likes/count`)
+        console.log(response.headers.get("Cache-Control"))
+        const data = await response.json()
+        console.log("likedata", data) // 응답 데이터 확인
+        if (!response.ok)
+          throw new Error(
+            data.error || "좋아요 카운트를 불러오는 데 실패했습니다.",
+          )
+        return data.reduce(
+          (acc: LikeCounts, { postId, count }: LikeCountData) => {
+            acc[postId] = count
+            return acc
+          },
+          {},
+        )
       },
-      body: JSON.stringify({ postId, userId: currentUserId }),
+      staleTime: 30000,
     })
 
-    if (!response.ok) {
-      const data = await response.json()
-      toast({
-        title: existingLike
-          ? "좋아요 삭제 중 오류가 발생했습니다."
-          : "좋아요 추가 중 오류가 발생했습니다.",
-        description: data.error,
+  // Toggle like with mutation
+  const toggleLikeMutation = useMutation({
+    mutationFn: async (postId: number) => {
+      if (!currentUserId) return
+      const existingLike = likedPosts.includes(postId)
+      const method = existingLike ? "DELETE" : "POST"
+      const response = await fetch(`/api/likes`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postId, userId: currentUserId }),
       })
-      // Rollback optimistic update on error
-      setLikedPosts((prevLikedPosts) =>
-        existingLike
-          ? [...prevLikedPosts, postId]
-          : prevLikedPosts.filter((id) => id !== postId),
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error)
+      }
+      return postId
+    },
+    onMutate: async (postId: number) => {
+      // Optimistic update
+      await queryClient.cancelQueries({
+        queryKey: ["userLikes", currentUserId],
+        exact: true,
+      })
+      const previousLikedPosts = queryClient.getQueryData<number[]>([
+        "userLikes",
+        currentUserId,
+      ])
+      queryClient.setQueryData<number[]>(["userLikes", currentUserId], (old) =>
+        old
+          ? old.includes(postId)
+            ? old.filter((id) => id !== postId)
+            : [...old, postId]
+          : [],
       )
-    } else {
-      fetchAllLikeCounts() // Update like count
-    }
-  }
+      return { previousLikedPosts }
+    },
+    onError: (error, _, context) => {
+      toast({
+        title: "오류가 발생했습니다.",
+        description: error.message,
+      })
+      queryClient.setQueryData(
+        ["userLikes", currentUserId],
+        context?.previousLikedPosts,
+      )
+    },
+    onSettled: () => {
+      // 무효화
+      queryClient.invalidateQueries({ queryKey: ["userLikes", currentUserId] })
+    },
+  })
+
+  const isPostLikedByUser = (postId: number) => likedPosts.includes(postId)
+  const getLikeCountForPost = (postId: number) => likeCounts[postId] || 0
 
   useEffect(() => {
     if (!currentUserId) return
-
-    const fetchInitialData = async () => {
-      await fetchUserLikes()
-      await fetchAllLikeCounts()
-    }
-
-    fetchInitialData()
 
     // Subscribe to real-time updates
     const channel = supabase
@@ -115,23 +126,21 @@ const useLike = () => {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "likes" },
-        () => fetchAllLikeCounts(),
+        () => queryClient.invalidateQueries({ queryKey: ["likeCounts"] }),
       )
       .subscribe()
 
     return () => {
       channel.unsubscribe()
     }
-  }, [currentUserId])
-
-  const isPostLikedByUser = (postId: number) => likedPosts.includes(postId)
-  const getLikeCountForPost = (postId: number) => likeCounts[postId] || 0
+  }, [currentUserId, queryClient])
 
   return {
-    toggleLike,
+    toggleLike: toggleLikeMutation.mutate,
     isPostLikedByUser,
     getLikeCountForPost,
-    error, // Return error state
+    likedPostsError,
+    likeCountsError,
   }
 }
 

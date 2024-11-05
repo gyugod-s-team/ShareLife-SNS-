@@ -20,7 +20,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
     handleFileChange,
     setTitle,
     setContent,
-    handleUpdatePost,
+    debouncedUpdatePost,
     handleEditPost,
     setShowModal,
   } = usePosts()
@@ -72,7 +72,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
                 height={300} // 실제 높이도 사용할 필요 없음
               />
             )}
-            <Button onClick={handleUpdatePost} className="mt-4 w-full">
+            <Button onClick={debouncedUpdatePost} className="mt-4 w-full">
               수정
             </Button>
           </DialogHeader>

@@ -7,6 +7,7 @@ import { useMemo, useState } from "react"
 import useAuth from "./useAuth"
 import { useToast } from "@/components/ui/use-toast"
 import { Comment } from "@/app/home/type"
+import { debounce } from "lodash"
 
 type FetchCommentsResult = {
   data: Comment[]
@@ -21,7 +22,6 @@ const useComments = (postId: number) => {
   const [editComment, setEditComment] = useState<string>("") // 댓글 수정용 상태
   const [editCommentId, setEditCommentId] = useState<number | null>(null)
   const [showCommentModal, setShowCommentModal] = useState<boolean>(false)
-  // const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
   const queryClient = useQueryClient()
 
@@ -71,40 +71,44 @@ const useComments = (postId: number) => {
   }
 
   // 댓글 생성 함수
-  const createComment = async (commentText: string) => {
-    if (!postId || !currentUserId || !commentText) {
-      toast({
-        title: "댓글 작성 오류",
-        description: "필수 필드가 누락되었습니다.",
-      })
-      return
-    }
+  const createComment = useMemo(
+    () =>
+      debounce(async (commentText: string) => {
+        if (!postId || !currentUserId || !commentText) {
+          toast({
+            title: "댓글 작성 오류",
+            description: "필수 필드가 누락되었습니다.",
+          })
+          return
+        }
 
-    const newCommentData = {
-      post_id: postId,
-      user_id: currentUserId,
-      content: commentText,
-    }
+        const newCommentData = {
+          post_id: postId,
+          user_id: currentUserId,
+          content: commentText,
+        }
 
-    const response = await fetch("/api/comments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newCommentData),
-    })
+        const response = await fetch("/api/comments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newCommentData),
+        })
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      toast({
-        title: "댓글 작성 중 오류가 발생하였습니다",
-        description: errorData.error,
-      })
-    } else {
-      toast({ title: "댓글이 작성되었습니다" })
-      queryClient.invalidateQueries({ queryKey: ["comments", postId] })
-    }
-  }
+        if (!response.ok) {
+          const errorData = await response.json()
+          toast({
+            title: "댓글 작성 중 오류가 발생하였습니다",
+            description: errorData.error,
+          })
+        } else {
+          toast({ title: "댓글이 작성되었습니다" })
+          queryClient.invalidateQueries({ queryKey: ["comments", postId] })
+        }
+      }, 300),
+    [postId, currentUserId, queryClient, toast],
+  )
 
   // 댓글 수정 함수
   const updateComment = async (commentId: number, updatedContent: string) => {

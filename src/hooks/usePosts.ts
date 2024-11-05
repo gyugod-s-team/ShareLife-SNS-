@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import useAuth from "./useAuth"
 import { NewPost, Post } from "@/app/home/type"
-import _, { throttle } from "lodash"
+import _, { debounce, throttle } from "lodash"
 
 const ROWS_PER_PAGE = 10
 
@@ -208,6 +207,12 @@ const usePosts = (userId?: string) => {
     resetForm()
   }
 
+  // 디바운스된 createPost 함수
+  const debouncedCreatePost = useMemo(
+    () => debounce(handleCreatePost, 300),
+    [handleCreatePost],
+  )
+
   const handleUpdatePost = async () => {
     const uploadedImageUrl = imageFile
       ? await uploadImage(imageFile)
@@ -224,6 +229,12 @@ const usePosts = (userId?: string) => {
     await updatePost(uploadedImageUrl)
     resetForm()
   }
+
+  // 디바운스된 updatePost 함수
+  const debouncedUpdatePost = useMemo(
+    () => debounce(handleUpdatePost, 300),
+    [handleUpdatePost],
+  )
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -260,8 +271,10 @@ const usePosts = (userId?: string) => {
     setShowModal,
     setImagePreview,
     handleEditPost,
-    handleCreatePost,
-    handleUpdatePost,
+    // handleCreatePost,
+    debouncedCreatePost,
+    debouncedUpdatePost,
+    // handleUpdatePost,
     handleFileChange,
     deletePost,
     posts,

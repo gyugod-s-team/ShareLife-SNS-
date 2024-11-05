@@ -10,7 +10,10 @@ const LikeButton: React.FC<{ postId: number }> = ({ postId }) => {
 
   // throttle된 toggleLike 함수 생성
   const throttledToggleLike = useCallback(
-    throttle((id: number) => toggleLike(id), 300), // 300ms 간격으로 요청
+    throttle(async (id: number) => {
+      // 좋아요 토글 후 상태 업데이트
+      await toggleLike(id)
+    }, 300), // 300ms 간격으로 요청
     [toggleLike],
   )
 
