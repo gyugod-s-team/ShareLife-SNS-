@@ -75,11 +75,11 @@
     "typescript": "^5.5.4"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "./*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{css,scss}": "prettier --write"
+    "./*.{css,scss}": "prettier --write"
   },
   "commitlint": {
     "extends": [
