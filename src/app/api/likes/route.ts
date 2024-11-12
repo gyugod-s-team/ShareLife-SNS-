@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     .from("likes")
     .select("post_id")
     .eq("user_id", userId)
-
+  console.log(likes, "likes")
   if (error) {
     const errorMessage: string = error.message || "Failed to fetch likes"
     return NextResponse.json({ error: errorMessage }, { status: 500 })

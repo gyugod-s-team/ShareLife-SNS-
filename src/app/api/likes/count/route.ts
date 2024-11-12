@@ -26,6 +26,5 @@ export async function GET(request: NextRequest) {
   })
 
   const likeCountsResults = await Promise.all(likeCountsPromises)
-
   return NextResponse.json(likeCountsResults)
 }

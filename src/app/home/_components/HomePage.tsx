@@ -25,7 +25,6 @@ const HomePage = () => {
     error,
   } = usePosts()
   const router = useRouter()
-
   const observer = useRef<IntersectionObserver | null>(null)
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement | null) => {
