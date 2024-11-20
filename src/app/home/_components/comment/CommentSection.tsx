@@ -1,4 +1,5 @@
 // components/CommentSection.tsx
+"use client"
 import React, { useCallback, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -7,7 +8,7 @@ import useAuth from "@/hooks/useAuth"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
-import TruncatedText from "@/app/home/_components/TruncatedText"
+import TruncatedText from "@/app/home/_components/truncatedText/TruncatedText"
 
 type CommentSectionProps = {
   postId: number

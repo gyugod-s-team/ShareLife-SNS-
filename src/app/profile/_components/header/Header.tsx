@@ -1,3 +1,4 @@
+"use client"
 import Logout from "@/app/home/_components/logout/Logout"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"

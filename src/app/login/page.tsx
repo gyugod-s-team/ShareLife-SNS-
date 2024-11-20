@@ -1,4 +1,4 @@
-import { loginMetadata } from "@/lib/metadata"
+import { loginMetadata } from "@/lib/metadata/metadata"
 import LoginPage from "./_components/LoginPage"
 
 export const metadata = loginMetadata

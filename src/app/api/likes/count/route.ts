@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/auth/supabase"
 import { NextRequest, NextResponse } from "next/server"
 
 // GET: 모든 게시물의 좋아요 수 가져오기

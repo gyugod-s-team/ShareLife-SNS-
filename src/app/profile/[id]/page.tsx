@@ -1,6 +1,6 @@
 import React from "react"
 import UserProfile from "../_components/UserProfilePage"
-import { userProfileMetadata } from "@/lib/metadata"
+import { userProfileMetadata } from "@/lib/metadata/metadata"
 import { Metadata } from "next"
 
 type Props = {

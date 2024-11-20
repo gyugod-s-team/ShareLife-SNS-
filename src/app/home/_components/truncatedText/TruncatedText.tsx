@@ -1,4 +1,5 @@
 // app/home/_components/TruncatedText.tsx
+"use client"
 import React, { useState } from "react"
 
 interface TruncatedTextProps {

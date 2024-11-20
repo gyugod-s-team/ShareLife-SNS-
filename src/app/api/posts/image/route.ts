@@ -1,4 +1,5 @@
-import { supabase } from "@/lib/supabase"
+//src/app/api/posts/image/route.ts
+import { supabase } from "@/lib/auth/supabase"
 import { NextResponse } from "next/server"
 import sharp from "sharp"
 

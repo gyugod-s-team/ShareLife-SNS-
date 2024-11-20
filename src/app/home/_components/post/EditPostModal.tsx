@@ -1,11 +1,12 @@
+"use client"
 import React from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import usePosts from "@/hooks/usePosts"
-import { Post } from "../../type"
 import Image from "next/image"
 import { FaPencilAlt } from "react-icons/fa" // Font Awesome
+import { Post } from "@/types/post"
 
 type EditPostModalProps = {
   post: Post

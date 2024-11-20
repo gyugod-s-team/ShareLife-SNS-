@@ -1,6 +1,6 @@
 // src/app/api/posts/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/auth/supabase"
 
 // GET: 게시물 목록 가져오기 (userId가 없을 경우 모든 게시글)
 export async function GET(request: NextRequest) {

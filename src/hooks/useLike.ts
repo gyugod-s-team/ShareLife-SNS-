@@ -47,6 +47,7 @@ const useLike = () => {
     }
   }
 
+  // 현재 사용자가 좋아요한 게시물
   const fetchLikedPosts = async () => {
     if (currentUserId) {
       try {
@@ -65,7 +66,6 @@ const useLike = () => {
           new Set(data.map((item: { postId: number }) => item.postId)),
         )
       } catch (error) {
-        console.error("좋아요 여부 불러오기 실패:", error)
         setError("좋아요 여부를 불러오는 데 실패했습니다.")
       }
     }

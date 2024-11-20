@@ -6,13 +6,8 @@ import {
 import { useMemo, useState } from "react"
 import useAuth from "./useAuth"
 import { useToast } from "@/components/ui/use-toast"
-import { Comment } from "@/app/home/type"
 import { debounce } from "lodash"
-
-type FetchCommentsResult = {
-  data: Comment[]
-  nextPage: number | undefined
-}
+import { Comment, FetchCommentsResult } from "@/types/comment"
 
 const ROWS_PER_PAGE = 20
 

@@ -1,5 +1,5 @@
 // src/app/api/likes/route.ts
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/auth/supabase"
 import { NextRequest, NextResponse } from "next/server"
 
 // GET: 사용자가 좋아요한 게시물 가져오기

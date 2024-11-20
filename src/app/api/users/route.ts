@@ -1,6 +1,6 @@
 // src/app/api/users/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase" // Supabase 클라이언트 설정 파일의 경로
+import { supabase } from "@/lib/auth/supabase" // Supabase 클라이언트 설정 파일의 경로
 
 export async function GET(req: NextRequest) {
   const { data, error } = await supabase

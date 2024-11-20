@@ -1,3 +1,4 @@
+"use client"
 import useLike from "@/hooks/useLike"
 import { throttle } from "lodash"
 import React, { useCallback } from "react"

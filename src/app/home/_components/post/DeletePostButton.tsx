@@ -1,8 +1,9 @@
+"use client"
 import React from "react"
 import { Button } from "@/components/ui/button"
 import usePosts from "@/hooks/usePosts"
-import { Post } from "../../type"
 import { FaTrash } from "react-icons/fa"
+import { Post } from "@/types/post"
 
 type DeletePostModalProps = {
   post: Post

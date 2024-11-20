@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/auth/supabase"
 import { NextResponse } from "next/server"
 
 // POST 요청: 로그아웃 처리

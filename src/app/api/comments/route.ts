@@ -1,6 +1,6 @@
 // src/app/api/comments/route.ts
 import { NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/auth/supabase"
 
 // GET: 특정 포스트의 댓글 목록 가져오기 (페이지네이션 포함)
 export async function GET(request: NextRequest) {

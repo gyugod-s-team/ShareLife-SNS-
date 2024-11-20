@@ -1,4 +1,4 @@
-import { registerMetadata } from "@/lib/metadata"
+import { registerMetadata } from "@/lib/metadata/metadata"
 import RegisterPage from "./_components/RegisterPage"
 
 export const metadata = registerMetadata

@@ -1,13 +1,12 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query"
 import useAuth from "./useAuth"
-import { NewPost, Post } from "@/app/home/type"
 import _, { debounce, throttle } from "lodash"
+import { NewPost, Post } from "@/types/post"
+import { fetchPosts } from "@/lib/api/fetchPosts"
 
-const ROWS_PER_PAGE = 10
-
-const usePosts = (userId?: string) => {
+const usePosts = (userId?: string, initialPosts?: Post[]) => {
   const { currentUserId, nickname } = useAuth()
   const [editPostId, setEditPostId] = useState<number | null>(null)
   const [title, setTitle] = useState<string>("")
@@ -17,37 +16,6 @@ const usePosts = (userId?: string) => {
   const [showModal, setShowModal] = useState<boolean>(false)
   const { toast } = useToast()
   const queryClient = useQueryClient()
-
-  type FetchPostsResult = {
-    data: Post[]
-    nextPage: number | undefined
-  }
-
-  let apiCallCount = 0
-
-  const fetchPosts = async (
-    pageParam: number = 1,
-    userId?: string,
-  ): Promise<FetchPostsResult> => {
-    apiCallCount++
-    const response = await fetch(
-      `/api/posts?page=${pageParam}&userId=${userId}`,
-      { method: "GET" },
-    )
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error("Error fetching posts:", errorData.error)
-      throw new Error(errorData.error)
-    }
-
-    const data = await response.json()
-
-    return {
-      data: data || [],
-      nextPage: data.length === ROWS_PER_PAGE ? pageParam + 1 : undefined,
-    }
-  }
 
   const {
     data: postsData,
@@ -62,6 +30,17 @@ const usePosts = (userId?: string) => {
     queryFn: ({ pageParam = 1 }) => fetchPosts(pageParam, userId),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 1,
+    initialData: initialPosts
+      ? {
+          pages: [
+            {
+              data: initialPosts,
+              nextPage: 2,
+            },
+          ],
+          pageParams: [1],
+        }
+      : undefined,
   })
 
   const posts = useMemo(
@@ -71,6 +50,7 @@ const usePosts = (userId?: string) => {
 
   const loadMorePosts = throttle(() => {
     if (hasNextPage && !isFetchingNextPage) {
+      console.log("Fetching next page...")
       fetchNextPage()
     }
   }, 300) // 300ms 동안 하나의 요청만
@@ -271,10 +251,8 @@ const usePosts = (userId?: string) => {
     setShowModal,
     setImagePreview,
     handleEditPost,
-    // handleCreatePost,
     debouncedCreatePost,
     debouncedUpdatePost,
-    // handleUpdatePost,
     handleFileChange,
     deletePost,
     posts,

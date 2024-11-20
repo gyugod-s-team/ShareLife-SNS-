@@ -5,6 +5,8 @@ const secret = process.env.NEXTAUTH_SECRET as string
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request, secret })
+  console.log("token", token) // 토큰을 확인해보세요.
+  console.log("request.nextUrl.pathname", request.nextUrl.pathname)
 
   // 인증된 사용자만 접근할 수 있는 페이지 경로
   const protectedPaths = ["/", "/home", "/profile"]

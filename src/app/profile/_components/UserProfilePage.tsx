@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import useAuth from "@/hooks/useAuth"
 import usePosts from "@/hooks/usePosts"
 import useFollow from "@/hooks/useFollow"
@@ -13,50 +13,46 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import Image from "next/image"
-import Header from "./Header"
 import CommentSection from "@/app/home/_components/comment/CommentSection"
-import { Post } from "@/app/home/type"
-import { useToast } from "@/components/ui/use-toast"
 import Skeleton from "react-loading-skeleton"
 import "react-loading-skeleton/dist/skeleton.css"
 import ProfileSkeleton from "./skeleton/ProfileSkeleton"
 import PostsSkeleton from "./skeleton/PostsSkeleton"
-import { useQuery } from "@tanstack/react-query"
+import Header from "./header/Header"
+import { useProfile } from "@/hooks/useProfile"
 
 const UserProfile = ({ params }: { params: { id: string } }) => {
   const { id } = params
-  const { currentUserId, fetchPostUserData } = useAuth()
+  const { currentUserId } = useAuth()
   const { posts, isFetchingNextPage, isError, error, isLoading, fetchPosts } =
     usePosts(id)
-  const { followers, following, followCounts, toggleFollow, isFollowing } =
-    useFollow(id)
-  const [showPostModal, setShowPostModal] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-  const [showFollowers, setShowFollowers] = useState(false)
-  const [showFollowing, setShowFollowing] = useState(false)
-  const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false)
-  const { toast } = useToast()
+  const { followers, following, followCounts, isFollowing } = useFollow(id)
+  const {
+    userData,
+    isUserDataSuccess,
+    isUserDataError,
+    isUserDataLoading,
+    handleToggleFollow,
+    handleConfirmUnfollow,
+    handleShowFollowers,
+    handleShowFollowing,
+    handlePostClick,
+    showPostModal,
+    selectedPost,
+    showFollowers,
+    showFollowing,
+    showUnfollowConfirm,
+    setShowPostModal,
+    setShowFollowers,
+    setShowFollowing,
+    setShowUnfollowConfirm,
+  } = useProfile(id)
 
   useEffect(() => {
     if (id) {
       fetchPosts(1, id)
     }
   }, [id, fetchPosts])
-
-  // useQuery를 사용하여 사용자 데이터를 가져옵니다.
-  const {
-    data: userData,
-    isSuccess: isUserDataSuccess,
-    isError: isUserDataError,
-    isLoading: isUserDataLoading,
-  } = useQuery({
-    queryKey: ["postUserData", id],
-    queryFn: () => fetchPostUserData(id), // fetchPostUserData를 호출할 때 id를 전달합니다.
-    enabled: !!id, // id가 있을 때만 쿼리를 활성화합니다.
-    staleTime: 10 * 60 * 1000, // 5분 동안 신선한 데이터로 유지
-    refetchInterval: false, // 자동 갱신 비활성화
-    gcTime: 10 * 60 * 1000, // cacheTime임 10분동엔 메모리 유지
-  })
 
   if (isUserDataLoading) {
     return (
@@ -68,57 +64,6 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
         </main>
       </div>
     )
-  }
-
-  if (isUserDataError) {
-    return <div>Error loading user data.</div>
-  }
-
-  const handleToggleFollow = async () => {
-    if (isFollowing) {
-      setShowUnfollowConfirm(true)
-    } else {
-      try {
-        await toggleFollow(id)
-        toast({
-          title: "팔로우 성공",
-          description: `${userData.nickname}님을 팔로우하였습니다.`,
-        })
-      } catch (error) {
-        console.error("Follow Error:", error)
-        toast({
-          title: "팔로우 오류",
-          description: (error as Error).message,
-        })
-      }
-    }
-  }
-
-  const handleConfirmUnfollow = async () => {
-    setShowUnfollowConfirm(false)
-    try {
-      await toggleFollow(id)
-      toast({
-        title: "언팔로우 성공",
-        description: `${userData.nickname}님을 언팔로우하였습니다.`,
-      })
-    } catch (error) {
-      console.error("Unfollow Error:", error)
-      toast({
-        title: "언팔로우 오류",
-        description: (error as Error).message,
-      })
-    }
-  }
-
-  const handleShowFollowers = () => setShowFollowers(true)
-  const handleShowFollowing = () => setShowFollowing(true)
-
-  const handlePostClick = (post: Post) => {
-    if (post) {
-      setSelectedPost(post)
-      setShowPostModal(true)
-    }
   }
 
   if (isFetchingNextPage || !posts) {

@@ -1,5 +1,5 @@
 //src/app/api/follows/following/route.ts
-import { supabase } from "@/lib/supabase"
+import { supabase } from "@/lib/auth/supabase"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
