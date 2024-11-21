@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.19.0
+          node-version: "20" # 최신 Node.js 버전으로 업데이트
 
       # pnpm 설치
       - name: Install pnpm
