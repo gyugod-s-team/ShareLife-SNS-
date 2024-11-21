@@ -1,0 +1,44 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 저장소 클론
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Node.js 18.19.0 설정
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.19.0
+
+      # pnpm 설치
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # 의존성 설치
+      - name: Install dependencies
+        run: pnpm install
+
+      # 린트 실행
+      - name: Lint code
+        run: pnpm run lint
+
+      # (선택 사항) 테스트 실행
+      - name: Run tests
+        run: pnpm test
+
+      # (선택 사항) 빌드 확인
+      - name: Build project
+        run: pnpm run build
