@@ -15,11 +15,11 @@ export function useProfile(userId: string) {
   const { fetchPostUserData } = useAuth()
   const { isFollowing, toggleFollow } = useFollow(userId)
   // 상태 관리
-  const [showPostModal, setShowPostModal] = useState(false)
+  const [showPostModal, setShowPostModal] = useState<boolean>(false)
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-  const [showFollowers, setShowFollowers] = useState(false)
-  const [showFollowing, setShowFollowing] = useState(false)
-  const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false)
+  const [showFollowers, setShowFollowers] = useState<boolean>(false)
+  const [showFollowing, setShowFollowing] = useState<boolean>(false)
+  const [showUnfollowConfirm, setShowUnfollowConfirm] = useState<boolean>(false)
   const { toast } = useToast()
 
   // useQuery를 사용하여 사용자 데이터를 가져옵니다.
@@ -94,8 +94,12 @@ export function useProfile(userId: string) {
     handleShowFollowers,
     handleShowFollowing,
     handlePostClick,
+    showPostModal,
+    selectedPost,
+    showFollowers,
+    showFollowing,
+    showUnfollowConfirm,
     setShowPostModal,
-    setSelectedPost,
     setShowFollowers,
     setShowFollowing,
     setShowUnfollowConfirm,
