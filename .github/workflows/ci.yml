@@ -23,9 +23,9 @@ jobs:
         with:
           node-version: "20" # 최신 Node.js 버전으로 업데이트
 
-      # pnpm 설치
-      - name: Install pnpm
-        run: npm install -g pnpm
+      # pnpm 체크
+      - name: Check pnpm version
+        run: pnpm -v
 
       # 의존성 설치
       - name: Install dependencies

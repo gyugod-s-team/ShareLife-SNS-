@@ -84,4 +84,6 @@ const PostCard = React.forwardRef<HTMLDivElement, { post: Post }>(
   },
 )
 
+PostCard.displayName = "PostCard"
+
 export default PostCard
