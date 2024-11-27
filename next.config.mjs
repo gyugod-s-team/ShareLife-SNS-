@@ -9,8 +9,8 @@ const nextConfig = {
     domains: ["jouopgwghtzpozglsrxw.supabase.co"], // 이미지 도메인 설정
   },
   metadataBase: isProduction
-    ? "https://www.sharelife.shop"
-    : "http://localhost:3000",
+    ? new URL("https://www.sharelife.shop")
+    : new URL("http://localhost:3000"),
   webpack(config) {
     if (isProduction) {
       config.optimization = {
