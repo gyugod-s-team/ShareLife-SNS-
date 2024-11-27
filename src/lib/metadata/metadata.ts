@@ -55,7 +55,7 @@ export const homeMetadata: Metadata = {
     title: "Share Life - 새로운 소셜 네트워크",
     description:
       "다양한 사람들과 공유하고 소통하는 SNS, Share Life에 오신 것을 환영합니다.",
-    url: "https://www.sharelife.shop/main",
+    url: "https://www.sharelife.shop/home",
     images: [
       {
         url: "/mainpageimage.webp",

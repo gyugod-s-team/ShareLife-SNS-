@@ -2,15 +2,16 @@ import TerserPlugin from "terser-webpack-plugin"
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer"
 
 const isProduction = process.env.NODE_ENV === "production"
+const metadataBase = isProduction
+  ? "https://www.sharelife.shop"
+  : "http://localhost:3000"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     domains: ["jouopgwghtzpozglsrxw.supabase.co"], // 이미지 도메인 설정
   },
-  experimental: {
-    metadataBase: "https://www.sharelife.shop", // metadataBase 설정 추가
-  },
+  experimental: metadataBase,
   webpack(config) {
     if (isProduction) {
       config.optimization = {
