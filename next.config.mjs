@@ -8,6 +8,9 @@ const nextConfig = {
   images: {
     domains: ["jouopgwghtzpozglsrxw.supabase.co"], // 이미지 도메인 설정
   },
+  experimental: {
+    metadataBase: "https://www.sharelife.shop", // metadataBase 설정 추가
+  },
   webpack(config) {
     if (isProduction) {
       config.optimization = {
