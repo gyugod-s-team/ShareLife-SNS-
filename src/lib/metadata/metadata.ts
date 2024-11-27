@@ -51,20 +51,20 @@ export const homeMetadata: Metadata = {
   alternates: {
     canonical: "https://www.sharelife.shop/home",
   },
-  openGraph: {
-    title: "Share Life - 새로운 소셜 네트워크",
-    description:
-      "다양한 사람들과 공유하고 소통하는 SNS, Share Life에 오신 것을 환영합니다.",
-    url: "https://www.sharelife.shop/home",
-    images: [
-      {
-        url: "/mainpageimage.webp",
-        width: 800,
-        height: 600,
-      },
-    ],
-    type: "website",
-  },
+  // openGraph: {
+  //   title: "Share Life - 새로운 소셜 네트워크",
+  //   description:
+  //     "다양한 사람들과 공유하고 소통하는 SNS, Share Life에 오신 것을 환영합니다.",
+  //   url: "https://www.sharelife.shop/home",
+  //   images: [
+  //     {
+  //       url: "/mainpageimage.webp",
+  //       width: 800,
+  //       height: 600,
+  //     },
+  //   ],
+  //   type: "website",
+  // },
 }
 
 // 사용자 프로필 페이지 메타데이터
@@ -73,16 +73,16 @@ export const userProfileMetadata: Metadata = {
   title: "사용자 프로필 - Share Life",
   description: "사용자의 프로필과 게시물을 확인하고 팔로우해 보세요.",
   keywords: ["프로필", "SNS 사용자", "소셜 미디어", "팔로우"],
-  openGraph: {
-    title: "사용자 프로필 - Share Life",
-    description: "사용자의 프로필과 게시물을 확인하고 팔로우해 보세요.",
-    images: [
-      {
-        url: "/userpageimage.webp",
-        width: 800,
-        height: 600,
-      },
-    ],
-    type: "website",
-  },
+  // openGraph: {
+  //   title: "사용자 프로필 - Share Life",
+  //   description: "사용자의 프로필과 게시물을 확인하고 팔로우해 보세요.",
+  //   images: [
+  //     {
+  //       url: "/userpageimage.webp",
+  //       width: 800,
+  //       height: 600,
+  //     },
+  //   ],
+  //   type: "website",
+  // },
 }
