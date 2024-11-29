@@ -130,10 +130,10 @@ const UserProfile = ({ params }: { params: { id: string } }) => {
                 <strong>{posts.length}</strong> posts
               </span>
               <button onClick={handleShowFollowers}>
-                <strong>{followCounts.followerCount || 0}</strong> followers
+                <strong>{followCounts.followingCount || 0}</strong> followers
               </button>
               <button onClick={handleShowFollowing}>
-                <strong>{followCounts.followingCount || 0}</strong> following
+                <strong>{followCounts.followerCount || 0}</strong> following
               </button>
             </div>
           </div>

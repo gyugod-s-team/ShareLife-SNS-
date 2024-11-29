@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import useAuth from "./useAuth"
 import useFollow from "./useFollow"
 import { Post } from "@/types/post"
@@ -20,6 +20,7 @@ export function useProfile(userId: string) {
   const [showFollowers, setShowFollowers] = useState<boolean>(false)
   const [showFollowing, setShowFollowing] = useState<boolean>(false)
   const [showUnfollowConfirm, setShowUnfollowConfirm] = useState<boolean>(false)
+  const queryClient = useQueryClient()
   const { toast } = useToast()
 
   // useQuery를 사용하여 사용자 데이터를 가져옵니다.
@@ -43,6 +44,7 @@ export function useProfile(userId: string) {
     } else {
       try {
         await toggleFollow(userId)
+        queryClient.invalidateQueries({ queryKey: ["postUserData", userId] })
         toast({
           title: "팔로우 성공",
           description: `${userData.nickname}님을 팔로우하였습니다.`,

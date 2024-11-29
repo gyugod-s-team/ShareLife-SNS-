@@ -8,7 +8,7 @@ type Props = {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = (await params).id
+  const id = params.id
 
   // 사용자 프로필 페이지 메타데이터를 복사하여 URL을 동적으로 설정
   const dynamicMetadata: Metadata = {

@@ -35,7 +35,7 @@ const useAuth = () => {
     })
 
     const data = await response.json()
-
+    console.log("data123", data)
     if (!response.ok) {
       throw new Error(data.error?.message || "Failed to fetch user data")
     }
