@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { data, error } = await query
-
+  console.log("dbneedsdata", data)
   if (error) {
     const errorMessage: string = error.message || "Failed to fetch posts"
     return NextResponse.json({ error: errorMessage }, { status: 500 })
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const { id, title, content, image_url } = await request.json()
-
+  console.log("id title cointent image", id, image_url)
   if (!id || !title || !content) {
     return NextResponse.json(
       { error: "필수 정보가 누락되었습니다." },

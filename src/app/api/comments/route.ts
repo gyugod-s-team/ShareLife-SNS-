@@ -54,10 +54,10 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ message: "Comment created successfully" })
 }
 
-// 댓글 수정 (PATCH)
-export async function PATCH(request: NextRequest) {
+// 댓글 수정 (PUT)
+export async function PUT(request: NextRequest) {
   const { commentId, userId, content } = await request.json()
-
+  console.log("comment user id", commentId, userId)
   if (!commentId || !userId || !content) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 })
   }

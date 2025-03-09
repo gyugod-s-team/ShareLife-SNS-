@@ -9,14 +9,11 @@ export const fetchPosts = async (
       ? "" // 클라이언트에서는 상대 경로를 사용
       : process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000" // 서버 환경에서는 절대 경로 사용
 
-  const userQuery = userId ? `&userId=${userId}` : ""
+  // const userQuery = userId ? `&userId=${userId}` : ""
   try {
-    const response = await fetch(
-      `${API_URL}/api/posts?page=${pageParam}${userQuery}`,
-      {
-        method: "GET",
-      },
-    )
+    const response = await fetch(`${API_URL}/api/posts?page=${pageParam}`, {
+      method: "GET",
+    })
 
     if (!response.ok) {
       const errorData = await response.json()

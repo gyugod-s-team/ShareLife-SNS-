@@ -26,6 +26,9 @@ const useComments = (postId: number) => {
   ): Promise<FetchCommentsResult> => {
     const response = await fetch(
       `/api/comments?postId=${postId}&page=${pageParam}`,
+      {
+        method: "GET", // Ensure the method is explicitly set to GET
+      },
     )
     if (!response.ok) {
       throw new Error("댓글 가져오기 오류")
@@ -116,7 +119,7 @@ const useComments = (postId: number) => {
     }
 
     const response = await fetch("/api/comments", {
-      method: "PATCH",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
