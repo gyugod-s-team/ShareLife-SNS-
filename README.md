@@ -297,3 +297,6 @@
     - Supabase의 follows 테이블의 column 타입을 똑같이 선언해서 데이터 호출해도 에러 발생
   - 해결 방법
     - Supabase에서 직접 Database 타입을 불러와 createClient에 추가하여 해결
+   
+## ppt 소개
+https://drive.google.com/file/d/1tEB3pg75wwjq-4jJSTkeZyf-vaj1EO0s/view?usp=sharing
